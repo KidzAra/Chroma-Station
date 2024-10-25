@@ -1,0 +1,1002 @@
+- type: entity
+  parent: BaseItem
+  id: BaseMagilinkRadio
+  name: мэджилинк
+  description: Необычный магазин для волшебников.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/books.rsi
+    layers:
+      - state: paper_blood
+      - state: cover_strong
+        color: "#645a5a"
+      - state: decor_wingette_flat
+        color: "#4d0303"
+      - state: icon_pentagramm
+        color: "#f7e19f"
+  - type: Item
+    sprite: Objects/Devices/communication.rsi
+    heldPrefix: old-radio
+  - type: UserInterface
+    interfaces:
+      enum.StoreUiKey.Key:
+        type: StoreBoundUserInterface
+  - type: ActivatableUI
+    key: enum.StoreUiKey.Key
+  - type: Store
+    preset: StorePresetMagilink
+    categories:
+    - MagilinkSpells  
+    - MagilinkItems
+    currencyWhitelist:
+    - Mana
+    balance:
+      Mana: 15
+
+- type: entity
+  parent: BaseMagilinkRadio
+  id: BaseMagilinkStudentRadio
+  components:
+  - type: Unremoveable
+  - type: Store
+    preset: StorePresetStudentMagilink
+    balance:
+      Mana: 4
+
+      
+- type: startingGear
+  id: WizardGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitColorDarkBlue
+    back: ClothingBackpackSatchelLeather
+    head: ClothingHeadHatWizard
+    outerClothing: ClothingOuterWizard
+    shoes: ClothingShoesWizardFix
+    id: PassengerPDA
+    ears: ClothingHeadsetService
+    pocket1: BaseMagilinkRadio
+  innerClothingSkirt: ClothingUniformJumpskirtColorDarkBlue
+  satchel: ClothingBackpackSatchelFilled
+  duffelbag: ClothingBackpackDuffelFilled
+
+- type: startingGear
+  id: WizardStudentGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitColorPurpleFix
+    back: ClothingBackpackSatchelLeather
+    head: ClothingHeadHatVioletwizard
+    outerClothing: ClothingOuterWizardViolet
+    shoes: ClothingShoesWizardFix
+    id: PassengerPDA
+    ears: ClothingHeadsetService
+    pocket1: BaseMagilinkStudentRadio
+
+  innerClothingSkirt: ClothingUniformJumpskirtColorPurple
+  satchel: ClothingBackpackSatchelFilled
+  duffelbag: ClothingBackpackDuffelFilled
+
+- type: entity
+  prefix: Wizard
+  name: Призываемый студент маг
+  id: RandomHumanoidSpawnerStudentWizard
+  components:
+
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: full
+    - type: RandomHumanoidSpawner
+      settings: WizardStudentSettings
+
+- type: randomHumanoidSettings
+  id: WizardStudentSettings
+  components:
+    - type: FlashImmunity
+    - type: Clumsy
+      clumsyDamage:
+        types:
+          Blunt: 5
+          Piercing: 4
+        groups:
+          Burn: 3
+    - type: NpcFactionMember
+      factions:
+        - Wizard
+    - type: Loadout
+      prototypes: [ WizardStudentGear ]
+
+- type: entity
+  prefix: Wizard
+  name: Маг
+  id: RandomHumanoidSpawnerWizard
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: full
+    - type: RandomHumanoidSpawner
+      settings: Wizard
+
+- type: randomHumanoidSettings
+  id: Wizard
+  components:
+    - type: Clumsy
+      clumsyDamage:
+        types:
+          Blunt: 5
+          Piercing: 4
+        groups:
+          Burn: 3
+    - type: FlashImmunity
+    - type: NpcFactionMember
+      factions:
+        - Wizard
+    - type: Loadout
+      prototypes: [ WizardGear ]
+        
+- type: entity
+  id: ActionBlinkY
+  name: Прыжок
+  description: Телепортирует в выбранное место.
+  noSpawn: true
+  components:
+  - type: WorldTargetAction
+    useDelay: 15
+    range: 32
+    itemIconStyle: BigAction
+    checkCanAccess: false
+    repeat: true
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: blink
+    event: !type:TeleportSpellEvent
+
+- type: entity
+  id: ActionWarping
+  name: Портал
+  description: Создаёт портал, телепортирующий в случайную точку. 
+  noSpawn: true
+  components:
+  - type: WorldTargetAction
+    useDelay: 20
+    range: 16
+    itemIconStyle: BigAction
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: warping
+    event: !type:WorldSpawnSpellEvent 
+      prototypes:
+      - id: PortalWizard
+        amount: 1
+      speech: GHEIT AUT
+
+- type: entity
+  id: ActionForceWallY
+  name: Защитный барьер
+  description: Создаёт магический барьер, через который можете проходить только вы.
+  noSpawn: true
+  components:
+  - type: InstantAction
+    useDelay: 30
+    itemIconStyle: BigAction
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Magic/forcewall.ogg
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: forcewall
+    event: !type:InstantSpawnSpellEvent
+      prototype: WallForceFix
+      posData: !type:TargetInFront
+      speech: action-speech-spell-forcewall
+
+- type: entity
+  id: ActionSpawnGolem
+  name: Призвать голема
+  description: Создаёт каменного голема, способный одним ударом снести врага с ног. Имеет крепкий удар, при этом довольно медлительный и живуч.
+  noSpawn: true
+  components:
+  - type: InstantAction
+    useDelay: 240
+    itemIconStyle: BigAction
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Magic/forcewall.ogg
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: golem
+    event: !type:InstantSpawnSpellEvent
+      prototype: GolemWizard
+      posData: !type:TargetCasterPos
+      speech: CLAE MASHON
+  
+# - type: entity
+#   id: ActionSpawnSkeleton
+#   name: Воскрешение из мёртвых
+#   description: Позволяет превратить сгнившие трупы в собственных скелетов.
+#   noSpawn: true
+#   components:
+#   - type: EntityTargetAction
+#     useDelay: 300
+#     itemIconStyle: BigAction
+#     sound: !type:SoundPathSpecifier
+#       path: /Audio/Magic/forcewall.ogg
+#     icon:
+#       sprite: /Wizard/magicactions.rsi
+#       state: golem
+#     event: !type:SmiteSpellEvent
+#       speech: action-speech-spell-smite
+
+- type: entity
+  id: ActionSpellEMP
+  name: Электромагнитный импульс
+  description: Создаёт большой поток электромагнитных волн, отключающая ближайшую технику.
+  noSpawn: true
+  components:
+  - type: InstantAction
+    useDelay: 60
+    itemIconStyle: BigAction
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Magic/forcewall.ogg
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: emp
+    event: !type:InstantSpawnSpellEvent
+      prototype: EMPWizard
+      posData: !type:TargetCasterPos
+      speech: NEC CANTIO  
+      
+# - type: entity
+#   id: ActionTogglePhaseCloak
+#   name: Фазовый покров
+#   description: Делает вас невидимым. Снимается при получении урона или атаке. Обязательно требует для активации мантию волшебника 
+#   noSpawn: true
+#   components:
+#   - type: InstantAction
+#     useDelay: 120
+#     priority: -9
+#     event: !type:ToggleStealthEvent
+
+- type: entity
+  id: ActionSpawnTearSmokeSpell
+  name: Слезоточивое задымление
+  description: Создаёт занавесу слезоточивого газа, длящуюся 10 секунд
+  noSpawn: true
+  components:
+  - type: WorldTargetAction
+    useDelay: 30
+    range: 30
+    itemIconStyle: BigAction
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: smoke
+    event: !type:WorldSpawnSpellEvent
+      prototypes:
+      - id: AdminInstantEffectTearGas
+        amount: 1
+      speech: PHEE CABUE
+
+- type: entity
+  id: ActionFireballY
+  name: Огненный шар
+  description: Выпускает взрывающийся огненный шар в направлении выбранного места.
+  noSpawn: true
+  components:
+  - type: WorldTargetAction
+    useDelay: 40
+    itemIconStyle: BigAction
+    range: 60
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Magic/fireball.ogg
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: fireball
+    event: !type:ProjectileSpellEvent
+      prototype: ProjectileDragonsBreath
+      posData: !type:TargetCasterPos
+      speech: action-speech-spell-fireball
+
+- type: entity
+  id: ActionTeslaBall
+  name: Тесла-удар
+  description: Выпускает заряженный шар который взрывается создавая удар молниями по всему живому рядом.
+  noSpawn: true
+  components:
+  - type: WorldTargetAction
+    useDelay: 30
+    itemIconStyle: BigAction
+    range: 60
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Effects/Lightning/lightningshock.ogg
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: tesla
+    event: !type:ProjectileSpellEvent
+      prototype: TeslaGunBullet
+      posData: !type:TargetCasterPos
+      speech: EI NATH
+
+
+- type: entity
+  id: ActionEmag
+  name: Криптографический секвенс
+  description: Позволяет взламывать различные устройства, начиная от шлюзов, заканчивая автоматами.
+  noSpawn: true
+  components:
+  - type: EntityTargetAction
+    charges: 3
+    renewCharges: true
+    useDelay: 120
+    itemIconStyle: BigAction
+    whitelist: { components: [ AccessReader, VendingMachine, Lathe ] }
+    range: 5
+    sound:
+      collection: sparks
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: emag
+    event: !type:ChangeComponentsSpellEvent
+      speech: WATT LEHFUQUE
+      toAdd: 
+      - type: Emagged
+      toRemove: [ AccessReader, Airlock ]
+
+
+- type: entity
+  id: ActionIceStrike
+  name: Замедляющий заряд
+  description: Выпускает снаряд, замедляющий ваших врагов, пока те не упадут.
+  noSpawn: true
+  components:
+  - type: WorldTargetAction
+    useDelay: 25
+    charges: 4
+    renewCharges: true
+    itemIconStyle: BigAction
+    range: 60
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Magic/forcewall.ogg
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: icestrike
+    event: !type:ProjectileSpellEvent
+      prototype: ProjectileWizardIceBullet
+      posData: !type:TargetCasterPos
+      speech: NYTH ERRIN
+
+- type: entity
+  id: ActionKnockY
+  name: Стук
+  description: Это заклинание открывает ближайшие двери.
+  noSpawn: true
+  components:
+  - type: InstantAction
+    useDelay: 10
+    itemIconStyle: BigAction
+    icon:
+      sprite: /Textures/Wizard/magicactions.rsi
+      state: knock
+    event: !type:KnockSpellEvent
+      speech: action-speech-spell-knock
+
+- type: storePreset
+  id: StorePresetStudentMagilink
+  storeName: Мэджилинк
+  categories:
+  - StudentMagilinkSpells
+  - StudentMagilinkItems
+  currencyWhitelist:
+  - Mana
+
+
+- type: storePreset
+  id: StorePresetMagilink
+  storeName: Мэджилинк
+  categories:
+  - MagilinkSpells
+  - MagilinkItems
+  currencyWhitelist:
+  - Mana
+
+- type: storeCategory
+  id: MagilinkSpells
+  name: Заклинания
+  priority: 0
+
+- type: storeCategory
+  id: MagilinkItems
+  name: Предметы
+  priority: 1
+
+
+- type: storeCategory
+  id: StudentMagilinkSpells
+  name: Заклинания
+  priority: 0
+
+- type: storeCategory
+  id: StudentMagilinkItems
+  name: Предметы
+  priority: 1
+
+- type: currency
+  id: Mana
+  displayName: Маны
+  cash: 
+    1: Mana
+  canWithdraw: false
+
+# Listings
+
+- type: listing
+  name: Слезоточивое задымление
+  description: "Создаёт занавесу слезоточивого газа, длящуюся 10 секунд. Перезарядка: 30 секунд."
+  id: MagilinkTearSmoke
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: smoke }
+  productAction: ActionSpawnTearSmokeSpell
+  cost:
+    Mana: 1
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Криптографический секвенс
+  description: "Позволяет взламывать различные устройства, начиная от шлюзов, заканчивая автоматами. Перезарядка: 120 секунд."
+  id: MagilinkEmag
+  icon: { sprite: /Wizard/magicactions.rsi, state: emag }
+  productAction: ActionEmag
+  cost:
+    Mana: 2
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Скачок
+  description: "Телепортирует в выбранное место. Перезарядка: 15 секунд."
+  id: MagilinkBlink
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: blink }
+  productAction: ActionBlinkY
+  cost:
+    Mana: 2
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+
+- type: listing
+  name: Огненный шар
+  description: "Выпускает взрывающийся огненный шар в направлении выбранного места. Перезарядка: 40 секунд."
+  id: MagilinkFireBall
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: fireball }
+  productAction: ActionFireballY
+  cost:
+    Mana: 2
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Тесла-удар
+  description: "Выпускает заряженный шар который взрывается создавая удар молниями по всему живому рядом. Перезарядка: 30 секунд."
+  id: MagilinkTeslaBall
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: tesla }
+  productAction: ActionTeslaBall
+  cost:
+    Mana: 2
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Замедляющий заряд
+  description: "Выпускает снаряд, замедляющий ваших врагов, пока те не упадут. Перезарядка: 25 секунд"
+  id: MagilinkIceStrike
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: icestrike }
+  productAction: ActionIceStrike
+  cost:
+    Mana: 1
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Стук
+  description: "Это заклинание открывает ближайшие двери. Перезарядка: 10 секунд."
+  id: MagilinkKnock
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: fireball }
+  productAction: ActionKnockY
+  cost:
+    Mana: 1 
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Портал
+  description: "Создаёт портал, телепортирующий в случайную точку. Перезарядка: 20 секунд."
+  id: MagilinkWarping
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
+  productAction: ActionWarping
+  cost:
+    Mana: 1 
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Защитный барьер
+  description: "Создаёт магический барьер, через который можете проходить только вы. Перезярдка: 30 секунд."
+  id: MagilinkForcewall
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
+  productAction: ActionForceWallY
+  cost:
+    Mana: 1 
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Призвать голема
+  description: "Создаёт каменного голема, способный одним ударом снести врага с ног. Имеет крепкий удар, при этом довольно медлительный и живуч. Перезарядка: 240 секунд."
+  id: MagilinkSpawnGolem
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: golem }
+  productAction: ActionSpawnGolem
+  cost:
+    Mana: 2
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Электромагнитный импульс
+  description: "Создаёт большой поток электромагнитных волн, отключающая ближайшую технику. Перезарядка: 60 секунд."
+  id: MagilinkEMP
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: emp }
+  productAction: ActionSpellEMP
+  cost:
+    Mana: 2
+  categories:
+  - MagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Скафандр волшебника
+  description: Довольно хороший по своим свойствам скафандр, при этом немного тяжелый.
+  id: MagilinkWizardHardsuit
+  productEntity: WizardHardSuitFix
+  cost:
+    Mana: 1
+  categories:
+  - MagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Волшебная палочка входа
+  description: На случай, когда нужен маршрут для побега.
+  id: MagilinkWeaponWandPolymorphDoor
+  productEntity: WeaponWandPolymorphDoorFix
+  cost:
+    Mana: 1
+  categories:
+  - MagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Посох исцеления
+  description: Вряд ли вам придется использовать его слишком часто в своем стремлении к резне.
+  id: MagilinkWeaponStaffHealing
+  productEntity: WeaponStaffHealingFix
+  cost:
+    Mana: 1
+  categories:
+  - MagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  id: MagilinkContract
+  name: Контракт на обучение
+  description: Призывает в вашу собственность ученика из школы магов. Имеет малый набор способностей при себе.
+  productEntity: WizardContract
+  cost:
+    Mana: 3
+  categories:
+  - MagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+
+# Student Listings
+
+- type: listing
+  name: Слезоточивое задымление
+  description: "Создаёт занавесу слезоточивого газа, длящуюся 10 секунд. Перезарядка: 30 секунд."
+  id: StudentMagilinkTearSmoke
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: smoke }
+  productAction: ActionSpawnTearSmokeSpell
+  cost:
+    Mana: 1
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Криптографический секвенс
+  description: "Позволяет взламывать различные устройства, начиная от шлюзов, заканчивая автоматами. Перезарядка: 120 секунд."
+  id: StudentMagilinkEmag
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: emag }
+  productAction: ActionEmag
+  cost:
+    Mana: 2
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Огненный шар
+  description: "Выпускает взрывающийся огненный шар в направлении выбранного места. Перезарядка: 40 секунд."
+  id: StudentMagilinkFireBall
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: fireball }
+  productAction: ActionFireballY
+  cost:
+    Mana: 2
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Тесла-удар
+  description: "Выпускает заряженный шар который взрывается создавая удар молниями по всему живому рядом. Перезарядка: 30 секунд."
+  id: StudentMagilinkTeslaBall
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: tesla }
+  productAction: ActionTeslaBall
+  cost:
+    Mana: 2
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Замедляющий заряд
+  description: "Выпускает снаряд, замедляющий ваших врагов, пока те не упадут. Перезарядка: 25 секунд"
+  id: StudentMagilinkIceStrike
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: icestrike }
+  productAction: ActionIceStrike
+  cost:
+    Mana: 1
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Стук
+  description: "Это заклинание открывает ближайшие двери. Перезарядка: 10 секунд."
+  id: StudentMagilinkKnock
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: fireball }
+  productAction: ActionKnockY
+  cost:
+    Mana: 1 
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Портал
+  description: "Создаёт портал, телепортирующий в случайную точку. Перезарядка: 20 секунд."
+  id: StudentMagilinkWarping
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
+  productAction: ActionWarping
+  cost:
+    Mana: 1 
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Защитный барьер
+  description: "Создаёт магический барьер, через который можете проходить только вы. Перезярдка: 30 секунд."
+  id: StudentMagilinkForcewall
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
+  productAction: ActionForceWallY
+  cost:
+    Mana: 1 
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Призвать голема
+  description: "Создаёт каменного голема, способный одним ударом снести врага с ног. Имеет крепкий удар, при этом довольно медлительный и живуч. Перезарядка: 240 секунд."
+  id: StudentMagilinkSpawnGolem
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: golem }
+  productAction: ActionSpawnGolem
+  cost:
+    Mana: 2
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Электромагнитный импульс
+  description: "Создаёт большой поток электромагнитных волн, отключающая ближайшую технику. Перезарядка: 60 секунд."
+  id: StudentMagilinkEMP
+  icon: { sprite: /Textures/Wizard/magicactions.rsi, state: emp }
+  productAction: ActionSpellEMP
+  cost:
+    Mana: 2
+  categories:
+  - StudentMagilinkSpells
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Скафандр волшебника
+  description: Довольно хороший по своим свойствам скафандр, при этом немного тяжелый.
+  id: StudentMagilinkWizardHardsuit
+  productEntity: WizardHardSuitFix
+  cost:
+    Mana: 1
+  categories:
+  - StudentMagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Волшебная палочка входа
+  description: На случай, когда нужен маршрут для побега.
+  id: StudentMagilinkWeaponWandPolymorphDoor
+  productEntity: WeaponWandPolymorphDoorFix
+  cost:
+    Mana: 1
+  categories:
+  - StudentMagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+- type: listing
+  name: Посох исцеления
+  description: Вряд ли вам придется использовать его слишком часто в своем стремлении к резне.
+  id: StudentMagilinkWeaponStaffHealing
+  productEntity: WeaponStaffHealingFix
+  cost:
+    Mana: 1
+  categories:
+  - StudentMagilinkItems
+  conditions:
+  - !type:ListingLimitedStockCondition  
+    stock: 1
+
+
+
+
+# Utils
+
+- type: entity
+  id: GolemWizard
+  parent: Golem
+  prefix: Wizard
+  components:
+  - type: TimedDespawn
+    lifetime: 35
+  - type: NpcFactionMember
+    factions:
+      - SimpleHostile
+    friendlyFactions:
+      - Wizard
+
+- type: entity
+  name: каменный голем
+  description: Существо, созданное из камня. Явно не хотелось бы попасть под его удар.
+  id: Golem
+  parent: [ MobElementalBase, MobCombat]
+  components:
+  - type: Tag
+    tags:
+      - CannotSuicide
+      - DoorBumpOpener
+      - FootstepSound
+  - type: FootstepModifier
+    footstepSoundCollection:
+      collection: FootstepThud
+  - type: Sprite
+    scale: 1.3, 1.3
+    sprite: /Textures/Wizard/golem.rsi
+    state: golem
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+  - type: MeleeWeapon
+    hidden: true
+    soundHit:
+      collection: MetalThud
+    damage:
+      types:
+        Structural: 25
+        Blunt: 15
+  - type: MeleeThrowOnHit
+    speed: 5
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      250: Dead
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 230
+      behaviors:
+      - !type:TriggerBehavior
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 1.5
+    baseSprintSpeed : 2
+  - type: NpcFactionMember
+    factions:
+      - SimpleHostile
+  - type: Damageable
+    damageContainer: StructuralInorganic
+
+- type: entity
+  id: PortalWizard
+  parent: BasePortal
+  components:
+  - type: Sprite
+    sprite: /Textures/Wizard/portal-wizard.rsi
+    layers:
+    - state: portal-wizard
+  - type: PointLight
+    color: "#ed85c2"
+    radius: 3
+    energy: 1
+    netsync: false
+  - type: TimedDespawn
+    lifetime: 10
+  - type: Portal
+    canTeleportToOtherMaps: true
+    maxRandomRadius: 20
+
+- type: entity
+  id: EMPWizard
+  suffix: Wizard
+  parent: AdminInstantEffectBase
+  components:
+  - type: EmpOnTrigger
+    range: 1.75
+    energyConsumption: 50000
+    disableDuration: 10
+
+- type: entity
+  id: WizardHardSuitFix
+  noSpawn: true
+  parent: ClothingOuterHardsuitWizard
+  name: Скафандр волшебника
+  description: Довольно хороший по своим свойствам скафандр, при этом немного тяжелый.
+
+- type: entity
+  id: WeaponWandPolymorphDoorFix
+  noSpawn: true
+  parent: WeaponWandPolymorphDoor
+  name: Волшебная палочка входа
+  description: На случай, когда нужен маршрут для побега.
+  
+
+- type: entity
+  id: WeaponStaffHealingFix
+  noSpawn: true
+  parent: WeaponStaffHealing
+  name: Посох исцеления
+  description: Вряд ли вам придется использовать его слишком часто в своем стремлении к резне.
+
+
+- type: entity
+  parent: BaseItem
+  id: WizardContract
+  name: Контракт на обучение
+  description: Призывает в вашу собственность ученика из школы магов. Имеет малый набор способностей при себе.
+  components:
+  - type: Sprite
+    sprite: /Textures/Wizard/magicactions.rsi
+    layers:
+    - state: scroll
+  - type: GhostRole
+    name: Маг подкрепления
+    description: Одному из мага нужна помощь. Вы отправляетесь в качестве помощи ему в совершений деяний
+  - type: GhostRoleMobSpawner
+    prototype: RandomHumanoidSpawnerStudentWizard
+  - type: EmitSoundOnUse
+    sound: /Audio/Effects/Emotes/parp1.ogg
+  - type: UseDelay
+    delay: 300
+  
+
+- type: entity
+  parent: ClothingUniformJumpsuitColorPurple
+  id: ClothingUniformJumpsuitColorPurpleFix
+  components:
+  - type: Unremoveable
+
+- type: entity
+  id: ProjectileWizardIceBullet
+  parent: BaseBullet
+  name: Icicle
+  description: Brrrrr.
+  noSpawn: true
+  components:
+  - type: Sprite
+    sprite: Structures/Specific/Anomalies/ice_anom.rsi
+  - type: Projectile
+    damage:
+      types:
+        Cold: 1
+  - type: StaminaDamageOnCollide
+    damage: 80
+
+- type: entity
+  id: WallForceFix
+  name: силовой барьер
+  parent: WallForce
+  components:
+  - type: Reflect
+    enabled: true
+    reflectProb: .5
+    spread: 90
+
+- type: entity
+  id: ClothingShoesWizardFix
+  name: волшебные сандали
+  parent: ClothingShoesWizard
+  description: Из них исходит странная энергия.
+  components:
+  - type: NoSlip
