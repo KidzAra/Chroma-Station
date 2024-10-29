@@ -72,7 +72,7 @@
 
 - type: entity
   id: SpawnSpellbook
-  name: spawn spellbook
+  name: Книга заклинания карпа
   parent: BaseSpellbook
   components:
     - type: Spellbook
@@ -81,7 +81,7 @@
 
 - type: entity
   id: ForceWallSpellbook
-  name: force wall spellbook
+  name: Книга заклинания силовой стенки
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -100,11 +100,11 @@
         color: gold
     - type: Spellbook
       spellActions:
-        ActionForceWall: -1
+        ActionForceWallY: -1
 
 - type: entity
   id: BlinkBook
-  name: blink spellbook
+  name: Книга заклинания перемещения
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -121,11 +121,11 @@
         color: gold
     - type: Spellbook
       spellActions:
-        ActionBlink: -1
+        ActionBlinkY: -1
 
 - type: entity
   id: SmiteBook
-  name: smite spellbook
+  name: Книга заклинания распотрашения
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -148,7 +148,7 @@
 
 - type: entity
   id: KnockSpellbook
-  name: knock spellbook
+  name: Книга Заклинания стука
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -166,11 +166,11 @@
         color: "#98c495"
     - type: Spellbook
       spellActions:
-        ActionKnock: -1
+        ActionKnockY: -1
 
 - type: entity
   id: FireballSpellbook
-  name: fireball spellbook
+  name: Книга заклинания огненного шара
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -190,7 +190,45 @@
         shader: unshaded
     - type: Spellbook
       spellActions:
-        ActionFireball: -1
+        ActionFireballY: -1
+
+- type: entity
+  id: PortalSpellbook
+  name: Книга заклинания портала
+  parent: BaseSpellbook
+  components:
+    - type: Sprite
+      sprite: Objects/Misc/books.rsi
+      layers:
+      - state: paper
+      - state: cover_strong
+        color: "#2c733d"
+      - state: decor_wingette_circle
+        color: green
+    - type: Spellbook
+      spellActions:
+        ActionWarping: -1
+
+- type: entity
+  id: GolemSpellbook
+  name: Книга заклинания голема
+  parent: BaseSpellbook
+  components:
+    - type: Sprite
+      sprite: Objects/Misc/books.rsi
+      layers:
+      - state: paper
+      - state: cover_old
+        color: "#525252"
+      - state: decor_wingette_circle
+        color: black
+      - state: detail_rivets
+        color: gray
+      - state: detail_bookmark
+        color: "#292929"
+    - type: Spellbook
+      spellActions:
+        ActionSpawnGolem: -1
 
 - type: entity
   id: ScrollRunes

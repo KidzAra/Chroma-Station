@@ -26,7 +26,7 @@
   - type: Store
     preset: StorePresetMagilink
     categories:
-    - MagilinkSpells  
+    - MagilinkSpells
     - MagilinkItems
     currencyWhitelist:
     - Mana
@@ -43,7 +43,7 @@
     balance:
       Mana: 4
 
-      
+
 - type: startingGear
   id: WizardGear
   equipment:
@@ -131,7 +131,7 @@
         - Wizard
     - type: Loadout
       prototypes: [ WizardGear ]
-        
+
 - type: entity
   id: ActionBlinkY
   name: Прыжок
@@ -142,7 +142,7 @@
     useDelay: 15
     range: 32
     itemIconStyle: BigAction
-    checkCanAccess: false
+    checkCanAccess: true
     repeat: true
     icon:
       sprite: /Textures/Wizard/magicactions.rsi
@@ -152,7 +152,7 @@
 - type: entity
   id: ActionWarping
   name: Портал
-  description: Создаёт портал, телепортирующий в случайную точку. 
+  description: Создаёт портал, телепортирующий в случайную точку.
   noSpawn: true
   components:
   - type: WorldTargetAction
@@ -162,7 +162,7 @@
     icon:
       sprite: /Textures/Wizard/magicactions.rsi
       state: warping
-    event: !type:WorldSpawnSpellEvent 
+    event: !type:WorldSpawnSpellEvent
       prototypes:
       - id: PortalWizard
         amount: 1
@@ -205,7 +205,7 @@
       prototype: GolemWizard
       posData: !type:TargetCasterPos
       speech: CLAE MASHON
-  
+
 # - type: entity
 #   id: ActionSpawnSkeleton
 #   name: Воскрешение из мёртвых
@@ -240,12 +240,12 @@
     event: !type:InstantSpawnSpellEvent
       prototype: EMPWizard
       posData: !type:TargetCasterPos
-      speech: NEC CANTIO  
-      
+      speech: NEC CANTIO
+
 # - type: entity
 #   id: ActionTogglePhaseCloak
 #   name: Фазовый покров
-#   description: Делает вас невидимым. Снимается при получении урона или атаке. Обязательно требует для активации мантию волшебника 
+#   description: Делает вас невидимым. Снимается при получении урона или атаке. Обязательно требует для активации мантию волшебника
 #   noSpawn: true
 #   components:
 #   - type: InstantAction
@@ -333,7 +333,7 @@
       state: emag
     event: !type:ChangeComponentsSpellEvent
       speech: WATT LEHFUQUE
-      toAdd: 
+      toAdd:
       - type: Emagged
       toRemove: [ AccessReader, Airlock ]
 
@@ -418,7 +418,7 @@
 - type: currency
   id: Mana
   displayName: Маны
-  cash: 
+  cash:
     1: Mana
   canWithdraw: false
 
@@ -435,7 +435,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -449,7 +449,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -463,7 +463,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 
@@ -478,7 +478,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -492,7 +492,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -506,7 +506,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -516,11 +516,11 @@
   icon: { sprite: /Textures/Wizard/magicactions.rsi, state: fireball }
   productAction: ActionKnockY
   cost:
-    Mana: 1 
+    Mana: 1
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -530,11 +530,11 @@
   icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
   productAction: ActionWarping
   cost:
-    Mana: 1 
+    Mana: 1
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -544,11 +544,11 @@
   icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
   productAction: ActionForceWallY
   cost:
-    Mana: 1 
+    Mana: 1
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -562,7 +562,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -576,7 +576,7 @@
   categories:
   - MagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -589,7 +589,7 @@
   categories:
   - MagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -602,7 +602,7 @@
   categories:
   - MagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -615,7 +615,7 @@
   categories:
   - MagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -628,7 +628,7 @@
   categories:
   - MagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 
@@ -645,7 +645,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -659,7 +659,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -673,7 +673,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -687,7 +687,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -701,7 +701,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -711,11 +711,11 @@
   icon: { sprite: /Textures/Wizard/magicactions.rsi, state: fireball }
   productAction: ActionKnockY
   cost:
-    Mana: 1 
+    Mana: 1
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -725,11 +725,11 @@
   icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
   productAction: ActionWarping
   cost:
-    Mana: 1 
+    Mana: 1
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -739,11 +739,11 @@
   icon: { sprite: /Textures/Wizard/magicactions.rsi, state: warping }
   productAction: ActionForceWallY
   cost:
-    Mana: 1 
+    Mana: 1
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -757,7 +757,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -771,7 +771,7 @@
   categories:
   - StudentMagilinkSpells
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -784,7 +784,7 @@
   categories:
   - StudentMagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -797,7 +797,7 @@
   categories:
   - StudentMagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 - type: listing
@@ -810,7 +810,7 @@
   categories:
   - StudentMagilinkItems
   conditions:
-  - !type:ListingLimitedStockCondition  
+  - !type:ListingLimitedStockCondition
     stock: 1
 
 
@@ -930,7 +930,7 @@
   parent: WeaponWandPolymorphDoor
   name: Волшебная палочка входа
   description: На случай, когда нужен маршрут для побега.
-  
+
 
 - type: entity
   id: WeaponStaffHealingFix
@@ -959,7 +959,7 @@
     sound: /Audio/Effects/Emotes/parp1.ogg
   - type: UseDelay
     delay: 300
-  
+
 
 - type: entity
   parent: ClothingUniformJumpsuitColorPurple

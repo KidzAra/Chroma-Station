@@ -1,6 +1,6 @@
 - type: species
   id: IPC
-  name: species-name-ipc
+  name: КПБ
   roundStart: true
   prototype: MobIPC
   sprites: MobIPCSprites
