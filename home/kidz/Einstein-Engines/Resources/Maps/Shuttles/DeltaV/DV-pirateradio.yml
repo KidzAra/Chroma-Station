@@ -5603,6 +5603,21 @@ entities:
         - 0
         - 0
         - 0
+<<<<<<< HEAD:home/kidz/Einstein-Engines/Resources/Maps/Shuttles/DeltaV/DV-pirateradio.yml
+=======
+- proto: SyndicateComputerComms
+  entities:
+  - uid: 715
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: 8.5,3.5
+      parent: 1
+    - type: CommunicationsConsole
+      color: gold
+      title: "Pirate Broadcast"
+      canShuttle: false
+>>>>>>> upstream/master:Resources/Maps/Shuttles/pirateradio.yml
 - proto: SyndicateMonitoringServer
   entities:
   - uid: 338
