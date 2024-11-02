@@ -1,11 +1,13 @@
 using System.Linq;
 using Content.Client.CharacterInfo;
 using Content.Client.Gameplay;
+using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.Character.Controls;
 using Content.Client.UserInterface.Systems.Character.Windows;
 using Content.Client.UserInterface.Systems.Objectives.Controls;
 using Content.Shared.Input;
+using Content.Shared.Objectives.Systems;
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
 using Robust.Client.Player;
@@ -113,19 +115,82 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
         _window.Objectives.RemoveAllChildren();
         _window.ObjectivesLabel.Visible = objectives.Any();
 
+        // start backmen: currency
+        {
+            _window.Memory.RemoveAllChildren();
+            foreach (var (groupId, conditions) in objectives)
+            {
+                if (groupId != "objective-issuer-SpaceBank")
+                {
+                    continue;
+                }
+                var objectiveControl = new CharacterObjectiveControl
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Vertical,
+                    Modulate = Color.Gray
+                };
+
+
+                var objectiveText = new FormattedMessage();
+                objectiveText.TryAddMarkup(Loc.GetString(groupId), out _); // backmen: locale
+
+                var objectiveLabel = new RichTextLabel
+                {
+                    StyleClasses = {StyleNano.StyleClassTooltipActionTitle}
+                };
+                objectiveLabel.SetMessage(objectiveText);
+
+                objectiveControl.AddChild(objectiveLabel);
+
+                foreach (var condition in conditions)
+                {
+                    var conditionControl = new ObjectiveConditionsControl();
+                    conditionControl.ProgressTexture.Texture = _sprite.Frame0(condition.Icon);
+                    conditionControl.ProgressTexture.Progress = condition.Progress;
+
+                    var titleMessage = new FormattedMessage();
+                    var descriptionMessage = new FormattedMessage();
+
+                    titleMessage.AddText(condition.Title);
+                    descriptionMessage.AddText(condition.Description);
+
+                    conditionControl.Title.SetMessage(titleMessage);
+                    conditionControl.Description.SetMessage(descriptionMessage);
+
+                    objectiveControl.AddChild(conditionControl);
+                }
+
+                _window.Memory.AddChild(objectiveControl);
+            }
+        }
+        // end backmen: currency
+
         foreach (var (groupId, conditions) in objectives)
         {
+            // start backmen: currency
+            if (groupId == "objective-issuer-SpaceBank")
+            {
+                continue;
+            }
+            // end backmen: currency
+
             var objectiveControl = new CharacterObjectiveControl
             {
                 Orientation = BoxContainer.LayoutOrientation.Vertical,
                 Modulate = Color.Gray
             };
 
-            objectiveControl.AddChild(new Label
+
+            var objectiveText = new FormattedMessage();
+            objectiveText.TryAddMarkup(Loc.GetString(groupId), out _); // backmen: locale
+
+            var objectiveLabel = new RichTextLabel
             {
-                Text = groupId,
-                Modulate = Color.LightSkyBlue
-            });
+                StyleClasses = {StyleNano.StyleClassTooltipActionTitle}
+            };
+            objectiveLabel.SetMessage(objectiveText);
+
+            objectiveControl.AddChild(objectiveLabel);
 
             foreach (var condition in conditions)
             {

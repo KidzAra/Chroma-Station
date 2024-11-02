@@ -12,6 +12,10 @@
       effects:
       - !type:SatiateThirst
         factor: 2
+      - !type:GenericStatusEffect
+        key: Drowsiness
+        time: 2.0
+        type: Remove
       - !type:AdjustReagent
         reagent: Theobromine
         amount: 0.05
@@ -51,8 +55,8 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 1
+        - !type:SatiateThirst
+          factor: 1
 
 - type: reagent
   id: CoconutWater
@@ -96,6 +100,15 @@
   metamorphicMaxFillLevels: 1
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
+  metabolisms:
+    Drink:
+      effects:
+      - !type:SatiateThirst
+        factor: 2
+      - !type:GenericStatusEffect
+        key: Drowsiness
+        time: 2.0
+        type: Remove
 
 - type: reagent
   id: GreenTea
@@ -145,6 +158,15 @@
   metamorphicMaxFillLevels: 5
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
+  metabolisms:
+    Drink:
+      effects:
+      - !type:SatiateThirst
+        factor: 2
+      - !type:GenericStatusEffect
+        key: Drowsiness
+        time: 2.0
+        type: Remove
 
 - type: reagent
   id: IcedGreenTea
@@ -178,11 +200,11 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 2
-      - !type:AdjustReagent
-        reagent: Theobromine
-        amount: 0.05
+        - !type:SatiateThirst
+          factor: 2
+        - !type:AdjustReagent
+          reagent: Theobromine
+          amount: 0.05
 
 - type: reagent
   id: JuiceBerryPoison
@@ -196,13 +218,13 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
+        - !type:SatiateThirst
     Poison:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 1
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 1
 
 - type: reagent
   id: Lemonade
@@ -222,8 +244,8 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 2
+        - !type:SatiateThirst
+          factor: 2
 
 - type: reagent
   id: Milk
@@ -242,8 +264,8 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 4
+        - !type:SatiateThirst
+          factor: 4
 
 - type: reagent
   id: MilkGoat
@@ -263,8 +285,8 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 4
+        - !type:SatiateThirst
+          factor: 4
 
 - type: reagent
   id: MilkSoy
@@ -286,8 +308,8 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: -2
+        - !type:SatiateThirst
+          factor: -2
 
 - type: reagent
   id: Nothing
@@ -298,9 +320,9 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 2
-        # TODO heal mimes
+        - !type:SatiateThirst
+          factor: 2
+          # TODO heal mimes
 
 - type: reagent
   id: NuclearCola
@@ -322,12 +344,16 @@
       effects:
       - !type:SatiateThirst
         factor: 6
+      - !type:GenericStatusEffect
+        key: Drowsiness
+        time: 3.0
+        type: Remove
     Poison:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 1
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 1
   fizziness: 0.5
 
 - type: reagent
@@ -354,6 +380,15 @@
   metamorphicMaxFillLevels: 1
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
+  metabolisms:
+    Drink:
+      effects:
+      - !type:SatiateThirst
+        factor: 2
+      - !type:GenericStatusEffect
+        key: Drowsiness
+        time: 2.0
+        type: Remove
 
 - type: reagent
   id: Tea
@@ -410,8 +445,8 @@
   metabolisms:
     Drink:
       effects:
-      - !type:SatiateThirst
-        factor: 4
+        - !type:SatiateThirst
+          factor: 4
 
 - type: reagent
   id: Ice
@@ -444,8 +479,12 @@
   metabolisms:
     Food:
       effects:
-      - !type:SatiateHunger
-        factor: 1
+        - !type:SatiateHunger
+          factor: 1
+          conditions:
+            - !type:OrganType
+              type: Vampiric
+              shouldHave: false
 
 - type: reagent
   id: HotRamen
@@ -458,8 +497,12 @@
   metabolisms:
     Food:
       effects:
-      - !type:SatiateHunger
-        factor: 4
+        - !type:SatiateHunger
+          factor: 4
+          conditions:
+            - !type:OrganType
+              type: Vampiric
+              shouldHave: false
 
 - type: reagent
   id: ArnoldPalmer

@@ -150,6 +150,9 @@ namespace Content.Server.GameTicking
 
         public void ToggleReadyAll(bool ready)
         {
+            if(RunLevel != GameRunLevel.PreRoundLobby){
+                return;
+            }
             var status = ready ? PlayerGameStatus.ReadyToPlay : PlayerGameStatus.NotReadyToPlay;
             foreach (var playerUserId in _playerGameStatuses.Keys)
             {
@@ -162,6 +165,10 @@ namespace Content.Server.GameTicking
 
         public void ToggleReady(ICommonSession player, bool ready)
         {
+            if(RunLevel != GameRunLevel.PreRoundLobby){
+                return;
+            }
+
             if (!_playerGameStatuses.ContainsKey(player.UserId))
                 return;
 
@@ -179,5 +186,11 @@ namespace Content.Server.GameTicking
             // update server info to reflect new ready count
             UpdateInfoText();
         }
+
+        public bool UserHasJoinedGame(ICommonSession session)
+            => UserHasJoinedGame(session.UserId);
+
+        public bool UserHasJoinedGame(NetUserId userId)
+            => PlayerGameStatuses.ContainsKey(userId) && PlayerGameStatuses[userId] == PlayerGameStatus.JoinedGame;
     }
 }

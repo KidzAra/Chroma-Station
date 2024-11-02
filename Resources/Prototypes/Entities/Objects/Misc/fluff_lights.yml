@@ -40,6 +40,7 @@
     sprite: Objects/Misc/Lights/lights.rsi
     size: Normal
     heldPrefix: off
+  - type: ShadowkinLight
   - type: PointLight
     enabled: false
     radius: 3
@@ -80,6 +81,7 @@
           festive: { state: christmaslamp }
         light:
           festive: { state: christmaslamp-on }
+  - type: Rotatable # Corvax-Resprite
 
 - type: entity
   name: banana lamp
@@ -94,6 +96,7 @@
         shader: unshaded
         visible: false
         map: [ "light" ]
+  - type: Rotatable
 
 - type: entity
   name: desk lamp
@@ -127,12 +130,13 @@
           festive:
             sprite: Objects/Misc/Lights/lamp.rsi
             state: christmaslamp-on
+  - type: Rotatable # Corvax-Resprite
 
 - type: entity
   name: interrogator lamp
   id: LampInterrogator
   parent: BaseLamp
-  description: Ultra-bright lamp for the bad cop
+  description: Ultra-bright lamp for the bad cop.
   components:
   - type: Sprite
     sprite: Objects/Misc/Lights/lampint.rsi
@@ -219,7 +223,7 @@
         startingItem: PowerCellMedium
   - type: Anchorable
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:
@@ -249,7 +253,7 @@
     state: floodlight_broken
   - type: Anchorable
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:

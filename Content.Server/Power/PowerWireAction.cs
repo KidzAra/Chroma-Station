@@ -1,7 +1,7 @@
 using Content.Server.Electrocution;
+using Content.Shared.Electrocution;
 using Content.Server.Power.Components;
 using Content.Server.Wires;
-using Content.Shared.Emp;
 using Content.Shared.Power;
 using Content.Shared.Wires;
 
@@ -79,9 +79,6 @@ public sealed partial class PowerWireAction : BaseWireAction
                 return;
             }
 
-            if (EntityManager.TryGetComponent<EmpDisabledComponent>(owner, out var emp))
-                return;
-
             power.PowerDisabled = false;
         }
     }
@@ -108,6 +105,7 @@ public sealed partial class PowerWireAction : BaseWireAction
             && !EntityManager.TryGetComponent(used, out electrified))
             return;
 
+        _electrocutionSystem.SetElectrifiedWireCut((used, electrified), setting);
         electrified.Enabled = setting;
     }
 
@@ -163,7 +161,7 @@ public sealed partial class PowerWireAction : BaseWireAction
     {
         base.Initialize();
 
-        _electrocutionSystem = EntitySystem.Get<ElectrocutionSystem>();
+        _electrocutionSystem = EntityManager.System<ElectrocutionSystem>();
     }
 
     // This should add a wire into the entity's state, whether it be

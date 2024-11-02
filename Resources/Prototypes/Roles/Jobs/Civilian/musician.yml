@@ -3,29 +3,30 @@
   name: job-name-musician
   description: job-description-musician
   playTimeTracker: JobMusician
-  requirements:
-    - !type:CharacterOverallTimeRequirement
-      min: 7200 # DeltaV - 2 hours
   startingGear: MusicianGear
   icon: "JobIconMusician"
-  supervisors: job-supervisors-hire
+  supervisors: job-supervisors-hop # Corvax-JobSupervisors
   access:
   - Maintenance # TODO Remove maint access for all gimmick jobs once access work is completed
   - Theatre
-  - Musician # DeltaV - Add Musician access
   special:
   - !type:GiveItemOnHolidaySpecial
     holiday: MikuDay
     prototype: BoxPerformer
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Civilian
+  wage: 50
+  #end-backmen: currency
 
 - type: startingGear
   id: MusicianGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitMusician
-    back: ClothingBackpackMusicianFilled
     eyes: ClothingEyesGlassesSunglasses
     shoes: ClothingShoesBootsLaceup
     id: MusicianPDA
     ears: ClothingHeadsetService
-  satchel: ClothingBackpackSatchelMusicianFilled
-  duffelbag: ClothingBackpackDuffelMusicianFilled
+  #storage:
+    #back:
+    #- Stuff

@@ -25,7 +25,3 @@
   - type: Tag
     tags:
     - QuantumSpinInverter
-  - type: ReverseEngineering # Delta
-    difficulty: 4
-    recipes:
-      - DeviceQuantumSpinInverter

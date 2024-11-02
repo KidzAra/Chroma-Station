@@ -3,42 +3,41 @@
   name: job-name-paramedic
   description: job-description-paramedic
   playTimeTracker: JobParamedic
-  antagAdvantage: 2 # DeltaV - Reduced TC: External Access
   requirements:
-    # - !type:RoleTimeRequirement # DeltaV - No Medical Doctor time requirement
-    #   role: JobMedicalDoctor
-    #   time: 14400 #4 hrs
-    - !type:CharacterDepartmentTimeRequirement # DeltaV - Medical dept time requirement
-      department: Medical
-      min: 28800 # DeltaV - 8 hours
-    # - !type:OverallPlaytimeRequirement # DeltaV - No playtime requirement
-    #   time: 54000 # 15 hrs
+    - !type:RoleTimeRequirement
+      role: JobMedicalDoctor
+      time: 14400 #4 hrs
+    - !type:OverallPlaytimeRequirement
+      time: 54000 # 15 hrs
   startingGear: ParamedicGear
   icon: "JobIconParamedic"
   supervisors: job-supervisors-cmo
   access:
   - Medical
   - Maintenance
-  - External
-  - Paramedic # DeltaV - Add Paramedic access
   extendedAccess:
   - Chemistry
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Medical
+  wage: 35
+  #end-backmen: currency
   special:
   - !type:AddComponentSpecial
     components:
-    - type: CPRTraining
+    #start-backmen: surgery
+    #- type: CPRTraining
+    - type: SurgerySpeedModifier
+      SpeedModifier: 1.75
+    #end-backmen: surgery
 
 - type: startingGear
   id: ParamedicGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitParamedic
-    back: ClothingBackpackParamedicFilledDV # DeltaV - Give Paramedics useful tools on spawn, see Resources/Prototypes/DeltaV/Catalog/Fills/Backpacks/StargerGear/backpack.yml
-    shoes: ClothingShoesColorBlue
     id: ParamedicPDA
     ears: ClothingHeadsetMedical
     belt: ClothingBeltMedicalEMTFilled
-    pocket1: HandheldGPSBasic # DeltaV - Give Paramedics useful tools on spawn
-    pocket2: HandheldCrewMonitor # DeltaV - Give Paramedics useful tools on spawn
-  innerClothingSkirt: ClothingUniformJumpskirtParamedic
-  satchel: ClothingBackpackSatchelParamedicFilledDV # DeltaV - Give Paramedics useful tools on spawn, see Resources/Prototypes/DeltaV/Catalog/Fills/Backpacks/StargerGear/satchel.yml
-  duffelbag: ClothingBackpackDuffelParamedicFilledDV # DeltaV - Give Paramedics useful tools on spawn, see Resources/Prototypes/DeltaV/Catalog/Fills/Backpacks/StargerGear/duffelbag.yml
+  storage:
+    back:
+    - EmergencyRollerBedSpawnFolded

@@ -29,7 +29,6 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/revolver.ogg
-    fireOnDropChance: 0.5
   - type: UseDelay
     delay: 0.66
   - type: ContainerContainer
@@ -53,7 +52,7 @@
 
 - type: entity
   name: Deckard
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseSecurityCommandContraband]
   id: WeaponRevolverDeckard
   description: A rare, custom-built revolver. Use when there is no time for Voight-Kampff test. Uses .45 magnum ammo.
   components:
@@ -80,21 +79,8 @@
     price: 1500
 
 - type: entity
-  name: Deckard
-  parent: WeaponRevolverDeckard
-  id: WeaponRevolverDeckardNonLethal
-  description: A rare, custom-built revolver. Use when you need to spare the Replicants. Comes with .45 magnum rubber.
-  components:
-  - type: RevolverAmmoProvider
-    whitelist:
-      tags:
-        - CartridgeMagnum
-        - SpeedLoaderMagnum
-    proto: CartridgeMagnumRubber
-
-- type: entity
   name: Inspector
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseRestrictedContraband]
   id: WeaponRevolverInspector
   description: A detective's best friend. Uses .45 magnum ammo.
   components:
@@ -108,23 +94,11 @@
     ammoSlots: [ null, null, null, null, null, null ]
 
 - type: entity
-  name: Inspector
-  parent: WeaponRevolverInspector
-  id: WeaponRevolverInspectorNonLethal
-  description: A detective's best friend. Comes loaded with .45 magnum rubber.
-  components:
-  - type: RevolverAmmoProvider
-    whitelist:
-      tags:
-        - CartridgeMagnum
-        - SpeedLoaderMagnum
-    proto: CartridgeMagnumRubber
-
-- type: entity
   name: Mateba
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseMajorContraband]
   id: WeaponRevolverMateba
   description: The iconic sidearm of the dreaded death squads. Uses .45 magnum ammo.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Revolvers/mateba.rsi
@@ -137,7 +111,7 @@
 
 - type: entity
   name: Python
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseSyndicateContraband]
   id: WeaponRevolverPython
   description: A robust revolver favoured by Syndicate agents. Uses .45 magnum ammo.
   components:
@@ -154,14 +128,11 @@
       path: /Audio/Weapons/Guns/Gunshots/revolver.ogg
       params:
         volume: 2.25
-    fireOnDropChance: 0.3
 
 - type: entity
-  name: Python
   parent: WeaponRevolverPython
   id: WeaponRevolverPythonAP # For the uplink.
   suffix: armor-piercing
-  description: A robust revolver favoured by Syndicate agents. Uses .45 magnum ammo.
   components:
   - type: RevolverAmmoProvider
     whitelist:
@@ -173,7 +144,7 @@
 
 - type: entity
   name: pirate revolver
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseMinorContraband]
   id: WeaponRevolverPirate
   description: An odd, old-looking revolver, favoured by pirate crews. Uses .45 magnum ammo.
   components:
@@ -183,7 +154,6 @@
     sprite: Objects/Weapons/Guns/Revolvers/pirate_revolver.rsi
   - type: Gun
     fireRate: 1
-    fireOnDropChance: 1
   - type: ContainerContainer
     containers:
       revolver-ammo: !type:Container

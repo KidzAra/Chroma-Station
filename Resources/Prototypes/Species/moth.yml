@@ -10,7 +10,8 @@
   skinColoration: Hues
   maleFirstNames: names_moth_first_male
   femaleFirstNames: names_moth_first_female
-  lastNames: names_moth_last
+  maleLastNames: names_moth_last # Corvax-LastnameGender
+  femaleLastNames: names_moth_last # Corvax-LastnameGender
 
 - type: speciesBaseSprites
   id: MobMothSprites
@@ -67,28 +68,10 @@
     Chest:
       points: 1
       required: false
-    RightLeg:
+    Legs:
       points: 2
       required: false
-    RightFoot:
-      points: 2
-      required: false
-    LeftLeg:
-      points: 2
-      required: false
-    LeftFoot:
-      points: 2
-      required: false
-    RightArm:
-      points: 2
-      required: false
-    RightHand:
-      points: 2
-      required: false
-    LeftArm:
-      points: 2
-      required: false
-    LeftHand:
+    Arms:
       points: 2
       required: false
 

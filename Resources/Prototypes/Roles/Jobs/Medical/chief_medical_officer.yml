@@ -5,19 +5,20 @@
   name: job-name-cmo
   description: job-description-cmo
   playTimeTracker: JobChiefMedicalOfficer
-  antagAdvantage: 6 # DeltaV - Reduced TC: Head of Staff
   requirements:
-    - !type:CharacterPlaytimeRequirement
-      tracker: JobChemist
-      min: 14400 #DeltaV 4 hrs
-#    - !type:RoleTimeRequirement # DeltaV - No Medical Doctor time requirement
+    - !type:RoleTimeRequirement
+      role: JobChemist
+      time: 18000 #5 hrs # Corvax-RoleTime
+#    - !type:RoleTimeRequirement
 #      role: JobMedicalDoctor
 #      time: 21600 #6 hrs
-    - !type:CharacterDepartmentTimeRequirement
+    - !type:DepartmentTimeRequirement
       department: Medical
-      min: 43200 # DeltaV - 12 hours
-    - !type:CharacterOverallTimeRequirement
-      min: 72000 # DeltaV - 20 hours
+      time: 54000 #15 hrs # Corvax-RoleTime
+#    - !type:OverallPlaytimeRequirement
+#      time: 144000 #40 hrs
+    - !type:AgeRequirement
+      requiredAge: 21
   weight: 10
   startingGear: CMOGear
   icon: "JobIconChiefMedicalOfficer"
@@ -30,29 +31,37 @@
   - Maintenance
   - Chemistry
   - ChiefMedicalOfficer
-  - Paramedic # DeltaV - Add Paramedic access
-  - External # DeltaV - Paramedics need this access
-  - Psychologist # DeltaV - Add Psychologist access
+  - Brig
   - Cryogenics
+  #start-backmen: currency
+  minBankBalance: 400
+  maxBankBalance: 600
+  wageDepartment: Command
+  wage: 100
+  #end-backmen: currency
   special:
+  - !type:AddComponentSpecial
+    components:
+    - type: PsionicBonusChance
+      flatBonus: 0.025
+    - type: NpcFactionMember
+      factions:
+      - CentralCommand
+    - type: CommandStaff
+    #start-backmen: surgery
+    #- type: CPRTraining
+    - type: SurgerySpeedModifier
+      SpeedModifier: 2.5
+    #end-backmen: surgery
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
-  - !type:AddComponentSpecial
-    components:
-      - type: CommandStaff
-  - !type:AddComponentSpecial
-    components:
-    - type: CPRTraining
 
 - type: startingGear
   id: CMOGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitCMO
-    back: ClothingBackpackCMOFilled
-    shoes: ClothingShoesColorBrown
     id: CMOPDA
     ears: ClothingHeadsetCMO
     belt: ClothingBeltMedicalFilled
-  innerClothingSkirt: ClothingUniformJumpskirtCMO
-  satchel: ClothingBackpackSatchelCMOFilled
-  duffelbag: ClothingBackpackDuffelCMOFilled
+  storage:
+    back:
+    - Flash

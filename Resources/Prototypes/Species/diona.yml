@@ -10,7 +10,8 @@
   skinColoration: Hues
   maleFirstNames: DionaFirst
   femaleFirstNames: DionaFirst
-  lastNames: DionaLast
+  maleLastNames: DionaLast # Corvax-LastnameGender
+  femaleLastNames: DionaLast # Corvax-LastnameGender
   naming: TheFirstofLast
 
 - type: speciesBaseSprites
@@ -46,28 +47,10 @@
     Chest:
       points: 1
       required: false
-    RightLeg:
+    Legs:
       points: 2
       required: false
-    RightFoot:
-      points: 2
-      required: false
-    LeftLeg:
-      points: 2
-      required: false
-    LeftFoot:
-      points: 2
-      required: false
-    RightArm:
-      points: 2
-      required: false
-    RightHand:
-      points: 2
-      required: false
-    LeftArm:
-      points: 2
-      required: false
-    LeftHand:
+    Arms:
       points: 2
       required: false
     Overlay:

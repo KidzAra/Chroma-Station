@@ -1,8 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using Content.Client.Lobby;
 using Content.Shared.CCVar;
-using Content.Shared.Customization.Systems;
 using Content.Shared.Players;
+using Content.Shared.Players.JobWhitelist;
 using Content.Shared.Players.PlayTimeTracking;
+using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using Robust.Client;
 using Robust.Client.Player;
@@ -14,14 +17,23 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.Players.PlayTimeTracking;
 
-public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
+public sealed class JobRequirementsManager : ISharedPlaytimeManager
 {
     [Dependency] private readonly IBaseClient _client = default!;
     [Dependency] private readonly IClientNetManager _net = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private readonly IEntityManager _entManager = default!;
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+
+    [Dependency] private readonly Content.Corvax.Interfaces.Shared.ISharedSponsorsManager _sponsorsManager = default!; // backmen: allRoles
+    [Dependency] private readonly Content.Corvax.Interfaces.Client.IClientDiscordAuthManager _discordManager = default!; // backmen: discord
 
     private readonly Dictionary<string, TimeSpan> _roles = new();
     private readonly List<string> _roleBans = new();
+    private readonly List<string> _jobWhitelists = new();
+
+    public ImmutableList<string> RoleBans => _roleBans.ToImmutableList(); // backmen: antag
 
     private ISawmill _sawmill = default!;
 
@@ -34,10 +46,17 @@ public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
         // Yeah the client manager handles role bans and playtime but the server ones are separate DEAL.
         _net.RegisterNetMessage<MsgRoleBans>(RxRoleBans);
         _net.RegisterNetMessage<MsgPlayTime>(RxPlayTime);
-        _net.RegisterNetMessage<MsgWhitelist>(RxWhitelist);
+        _net.RegisterNetMessage<MsgJobWhitelist>(RxJobWhitelist);
 
         _client.RunLevelChanged += ClientOnRunLevelChanged;
     }
+
+    //start-backmen: whitelist
+    public bool IsWhitelisted()
+    {
+        return _entManager.SystemOrNull<Backmen.WL.WhitelistSystem>()?.Whitelisted ?? false;
+    }
+    //end-backmen: whitelist
 
     private void ClientOnRunLevelChanged(object? sender, RunLevelChangedEventArgs e)
     {
@@ -45,15 +64,14 @@ public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
         {
             // Reset on disconnect, just in case.
             _roles.Clear();
+            _jobWhitelists.Clear();
+            _roleBans.Clear();
         }
     }
 
     private void RxRoleBans(MsgRoleBans message)
     {
         _sawmill.Debug($"Received roleban info containing {message.Bans.Count} entries.");
-
-        if (_roleBans.Equals(message.Bans))
-            return;
 
         _roleBans.Clear();
         _roleBans.AddRange(message.Bans);
@@ -78,33 +96,117 @@ public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
         Updated?.Invoke();
     }
 
+    private void RxJobWhitelist(MsgJobWhitelist message)
+    {
+        _jobWhitelists.Clear();
+        _jobWhitelists.AddRange(message.Whitelist);
+        Updated?.Invoke();
+    }
+
+    public bool IsAllowed(JobPrototype job, HumanoidCharacterProfile? profile, [NotNullWhen(false)] out FormattedMessage? reason)
+    {
+        reason = null;
+
+        if (_roleBans.Contains($"Job:{job.ID}"))
+        {
+            reason = FormattedMessage.FromUnformatted(Loc.GetString("role-ban"));
+            return false;
+        }
+
+        //start-backmen: allRoles
+        if (_sponsorsManager.IsClientAllRoles())
+            return true;
+        //end-backmen
+
+        //start-backmen: discord
+        if (job.DiscordRequired && _discordManager.IsEnabled && !_discordManager.IsVerified)
+        {
+            reason = FormattedMessage.FromUnformatted(Loc.GetString("role-required-discord"));
+            return false;
+        }
+        //end-backmen: discord
+
+        if (!CheckWhitelist(job, out reason))
+            return false;
+
+        var player = _playerManager.LocalSession;
+        if (player == null)
+            return true;
+
+        return CheckRoleRequirements(job, profile, out reason);
+    }
+
+    public bool CheckRoleRequirements(JobPrototype job, HumanoidCharacterProfile? profile, [NotNullWhen(false)] out FormattedMessage? reason)
+    {
+        var reqs = _entManager.System<SharedRoleSystem>().GetJobRequirement(job);
+        return CheckRoleRequirements(reqs, profile, out reason);
+    }
+
+    public bool CheckRoleRequirements(HashSet<JobRequirement>? requirements, HumanoidCharacterProfile? profile, [NotNullWhen(false)] out FormattedMessage? reason)
+    {
+        reason = null;
+
+        if (requirements == null || !_cfg.GetCVar(CCVars.GameRoleTimers))
+            return true;
+
+        //start-backmen: allRoles
+        if (_sponsorsManager.IsClientAllRoles())
+            return true;
+        //end-backmen
+
+        var reasons = new List<string>();
+        foreach (var requirement in requirements)
+        {
+            if (requirement.Check(_entManager, _prototypes, profile, _roles, out var jobReason))
+                continue;
+
+            reasons.Add(jobReason.ToMarkup());
+        }
+
+        reason = reasons.Count == 0 ? null : FormattedMessage.FromMarkupOrThrow(string.Join('\n', reasons));
+        return reason == null;
+    }
+
+    public bool CheckWhitelist(JobPrototype job, [NotNullWhen(false)] out FormattedMessage? reason)
+    {
+        reason = default;
+        if (!_cfg.GetCVar(CCVars.GameRoleWhitelist))
+            return true;
+
+        if (job.Whitelisted && !_jobWhitelists.Contains(job.ID))
+        {
+            reason = FormattedMessage.FromUnformatted(Loc.GetString("role-not-whitelisted"));
+            return false;
+        }
+
+        return true;
+    }
+
     public TimeSpan FetchOverallPlaytime()
     {
         return _roles.TryGetValue("Overall", out var overallPlaytime) ? overallPlaytime : TimeSpan.Zero;
     }
 
-    public Dictionary<string, TimeSpan> FetchPlaytimeByRoles()
+    public IEnumerable<KeyValuePair<string, TimeSpan>> FetchPlaytimeByRoles()
     {
         var jobsToMap = _prototypes.EnumeratePrototypes<JobPrototype>();
-        var ret = new Dictionary<string, TimeSpan>();
 
         foreach (var job in jobsToMap)
+        {
             if (_roles.TryGetValue(job.PlayTimeTracker, out var locJobName))
-                ret.Add(job.Name, locJobName);
-
-        return ret;
+            {
+                yield return new KeyValuePair<string, TimeSpan>(job.Name, locJobName);
+            }
+        }
     }
 
-
-    public Dictionary<string, TimeSpan> GetPlayTimes()
+    public IReadOnlyDictionary<string, TimeSpan> GetPlayTimes(ICommonSession session)
     {
-        var dict = FetchPlaytimeByRoles();
-        dict.Add(PlayTimeTrackingShared.TrackerOverall, FetchOverallPlaytime());
-        return dict;
-    }
+        if (session != _playerManager.LocalSession)
+        {
+            return new Dictionary<string, TimeSpan>();
+        }
 
-    public Dictionary<string, TimeSpan> GetRawPlayTimeTrackers()
-    {
         return _roles;
     }
 }

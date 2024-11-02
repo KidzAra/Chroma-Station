@@ -3,46 +3,30 @@
   name: job-name-chaplain
   description: job-description-chaplain
   playTimeTracker: JobChaplain
-  requirements:
-    - !type:CharacterDepartmentTimeRequirement
-      department: Epistemics # Chaplain is now one of the station's "Crew-Aligned Wizards"
-      min: 14400 # 4 hours
-    - !type:CharacterLogicOrRequirement
-      requirements:
-        - !type:CharacterSpeciesRequirement
-          inverted: true
-          species:
-            - IPC
-        - !type:CharacterTraitRequirement
-          traits:
-            - AnomalousPositronics
   startingGear: ChaplainGear
   icon: "JobIconChaplain"
-  supervisors: job-supervisors-rd
+  supervisors: job-supervisors-hop
   access:
   - Chapel
-  - Research
   - Maintenance
   special:
   - !type:AddComponentSpecial
     components:
-    - type: BibleUser
-    - type: Psionic
-      powerRollMultiplier: 3
-    - type: InnatePsionicPowers
-      powersToAdd:
-        - TelepathyPower
-        - HealingWordPower
-        - SummonRemiliaPower
+    - type: BibleUser #Lets them heal with bibles
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Civilian
+  wage: 50
+  #end-backmen: currency
 
 - type: startingGear
   id: ChaplainGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitChaplain
-    back: ClothingBackpackChaplainFilled
     shoes: ClothingShoesColorBlack
     id: ChaplainPDA
-    ears: ClothingHeadsetScience
-  innerClothingSkirt: ClothingUniformJumpskirtChaplain
-  satchel: ClothingBackpackSatchelChaplainFilled
-  duffelbag: ClothingBackpackDuffelChaplainFilled
+    ears: ClothingHeadsetService
+  storage:
+    back:
+    - Bible
+    - RubberStampChaplain

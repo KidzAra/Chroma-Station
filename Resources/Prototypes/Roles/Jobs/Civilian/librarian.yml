@@ -3,47 +3,31 @@
   name: job-name-librarian
   description: job-description-librarian
   playTimeTracker: JobLibrarian
-  requirements:
-    - !type:CharacterDepartmentTimeRequirement
-      department: Epistemics
-      min: 14400
-    - !type:CharacterLogicOrRequirement
-      requirements:
-        - !type:CharacterSpeciesRequirement
-          inverted: true
-          species:
-            - IPC
-        - !type:CharacterTraitRequirement
-          traits:
-            - AnomalousPositronics
   startingGear: LibrarianGear
   icon: "JobIconLibrarian"
-  supervisors: job-supervisors-rd
+  supervisors: job-supervisors-hop
   access:
-  - Research
+  - Service
   - Maintenance
-  - Library
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Civilian
+  wage: 50
+  #end-backmen: currency
   special:
   - !type:AddComponentSpecial
     components:
-    - type: Psionic
-    - type: InnatePsionicPowers
-      powersToAdd:
-        - XenoglossyPower
-        - TelepathyPower
-
+    - type: UniversalLanguageSpeaker
 
 - type: startingGear
   id: LibrarianGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitLibrarian
-    back: ClothingBackpackLibrarianFilled
     shoes: ClothingShoesBootsLaceup
-    outerClothing: ClothingOuterCoatRnd
     id: LibrarianPDA
-    ears: ClothingHeadsetScience
-    pocket1: d10Dice
-    pocket2: HandLabeler
-  innerClothingSkirt: ClothingUniformJumpskirtLibrarian
-  satchel: ClothingBackpackSatchelLibrarianFilled
-  duffelbag: ClothingBackpackDuffelLibrarianFilled
+    ears: ClothingHeadsetService
+    pocket1: d20Dice
+    pocket2: HandLabeler # for making named bestsellers
+  storage:
+    back:
+    - BookRandom

@@ -67,6 +67,11 @@
           False: { visible: false }
   - type: PlantHolder
     drawWarnings: true
+    wateringSound:
+      path: /Audio/Effects/Fluids/slosh.ogg
+      params:
+        volume: -6
+        variation: 0.20
   - type: Destructible
     thresholds:
     - trigger:
@@ -82,6 +87,8 @@
         acts: ["Destruction"]
   - type: Machine
     board: HydroponicsTrayMachineCircuitboard
+  - type: TTS # Corvax-TTS
+    voice: TrainingRobot
   - type: WiresPanel
   - type: AmbientSound
     volume: -9
@@ -91,6 +98,7 @@
   - type: GuideHelp
     guides:
     - Botany
+    - Chemicals
 
 - type: entity
   parent: hydroponicsTray

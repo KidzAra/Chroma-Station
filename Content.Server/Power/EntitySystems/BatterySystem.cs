@@ -1,6 +1,5 @@
 using Content.Server.Cargo.Systems;
 using Content.Server.Emp;
-using Content.Shared.Emp;
 using Content.Server.Power.Components;
 using Content.Shared.Examine;
 using Content.Shared.Rejuvenate;
@@ -85,8 +84,17 @@ namespace Content.Server.Power.EntitySystems
             while (query.MoveNext(out var uid, out var comp, out var batt))
             {
                 if (!comp.AutoRecharge) continue;
-                if (batt.IsFullyCharged) continue;
-                TrySetCharge(uid, batt.CurrentCharge + comp.AutoRechargeRate * frameTime, batt);
+
+                if (comp.AutoRechargeRate > 0)
+                {
+                    if (batt.IsFullyCharged) continue;
+                    SetCharge(uid, batt.CurrentCharge + comp.AutoRechargeRate * frameTime, batt);
+                }
+                if (comp.AutoRechargeRate < 0) //self discharging
+                {
+                    if (batt.CurrentCharge == 0) continue;
+                    UseCharge(uid, -comp.AutoRechargeRate * frameTime, batt);
+                }
             }
         }
 
@@ -101,7 +109,6 @@ namespace Content.Server.Power.EntitySystems
         private void OnEmpPulse(EntityUid uid, BatteryComponent component, ref EmpPulseEvent args)
         {
             args.Affected = true;
-            args.Disabled = true;
             UseCharge(uid, args.EnergyConsumption, component);
         }
 
@@ -140,7 +147,8 @@ namespace Content.Server.Power.EntitySystems
 
             var old = battery.CurrentCharge;
             battery.CurrentCharge = MathHelper.Clamp(value, 0, battery.MaxCharge);
-            if (MathHelper.CloseTo(battery.CurrentCharge, old))
+            if (MathHelper.CloseTo(battery.CurrentCharge, old) &&
+                !(old != battery.CurrentCharge && battery.CurrentCharge == battery.MaxCharge))
                 return;
 
             var ev = new ChargeChangedEvent(battery.CurrentCharge, battery.MaxCharge);
@@ -156,18 +164,6 @@ namespace Content.Server.Power.EntitySystems
                 return false;
 
             UseCharge(uid, value, battery);
-            return true;
-        }
-
-        /// <summary>
-        ///     Like SetCharge, but checks for conditions like EmpDisabled before executing
-        /// </summary>
-        public bool TrySetCharge(EntityUid uid, float value, BatteryComponent? battery = null)
-        {
-            if (!Resolve(uid, ref battery, false) || TryComp<EmpDisabledComponent>(uid, out var emp))
-                return false;
-
-            SetCharge(uid, value, battery);
             return true;
         }
 

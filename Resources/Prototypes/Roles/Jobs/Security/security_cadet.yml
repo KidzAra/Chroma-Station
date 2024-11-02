@@ -4,23 +4,29 @@
   description: job-description-cadet
   playTimeTracker: JobSecurityCadet
   requirements:
-    - !type:CharacterOverallTimeRequirement
-      min: 14400 # DeltaV - 4 hours
-#    - !type:DepartmentTimeRequirement # DeltaV - Removes time limit
-#      department: Security
-#      time: 54000 #15 hrs
-#      inverted: true # stop playing intern if you're good at security!
+    - !type:OverallPlaytimeRequirement
+      time: 36000 #10 hrs # Corvax-RoleTime
+    # - !type:DepartmentTimeRequirement
+      # department: Security
+      # time: 72000 #20 hrs # Corvax-RoleTime
+      # inverted: true # stop playing intern if you're good at security!
   startingGear: SecurityCadetGear
   icon: "JobIconSecurityCadet"
   supervisors: job-supervisors-security
   canBeAntag: false
   access:
   - Security
-  #- Brig # Delta V: Removed
+  - Brig
   - Maintenance
   - Service
   - External
   - Cryogenics
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Security
+  wage: 25
+  #end-backmen: currency
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
@@ -28,14 +34,13 @@
 - type: startingGear
   id: SecurityCadetGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitColorRed
-    back: ClothingBackpackSecurity
-    shoes: ClothingShoesBootsCombatFilled
-    outerClothing: ClothingOuterArmorDuraVest # DeltaV - ClothingOuterArmorBasic replaced in favour of stab vest. Sucks to suck, cadets
+    shoes: ClothingShoesBootsJackSec # Corvax-Resprite-MRP
+    outerClothing: ClothingOuterArmorBasic
     id: SecurityCadetPDA
     ears: ClothingHeadsetSecurity
     belt: ClothingBeltSecurityFilled
-    pocket2: BookSecurity
-  innerClothingSkirt: ClothingUniformJumpskirtColorRed
-  satchel: ClothingBackpackSatchelSecurity
-  duffelbag: ClothingBackpackDuffelSecurity
+    pocket1: WeaponPistolMk58
+    pocket2: BookSpaceLaw # Corvax-HyperLink
+  storage:
+    back:
+    - Flash

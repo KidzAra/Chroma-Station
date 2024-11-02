@@ -3,33 +3,41 @@
   name: job-name-intern
   description: job-description-intern
   playTimeTracker: JobMedicalIntern
-  requirements:
-    # - !type:DepartmentTimeRequirement # DeltaV - Removes time limit
-    #   department: Medical
-    #   time: 54000 # 15 hrs
-    #   inverted: true # stop playing intern if you're good at med!
+  # requirements:
+    # - !type:DepartmentTimeRequirement
+      # department: Medical
+      # time: 36000 #10 hrs # Corvax-RoleTime
+      # inverted: true # stop playing intern if you're good at med!
   startingGear: MedicalInternGear
   icon: "JobIconMedicalIntern"
   supervisors: job-supervisors-medicine
-  canBeAntag: true # DeltaV - Can be antagonist
+  canBeAntag: true # Corvax-MRP: Available not only for newbies
   access:
   - Medical
   - Maintenance
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Medical
+  wage: 25
+  #end-backmen: currency
   special:
   - !type:AddComponentSpecial
     components:
-    - type: CPRTraining
+    #start-backmen: surgery
+    #- type: CPRTraining
+    - type: SurgerySpeedModifier
+      SpeedModifier: 1.5
+    #end-backmen: surgery
 
 - type: startingGear
   id: MedicalInternGear
   equipment:
-    jumpsuit: UniformScrubsColorBlue # DeltaV - Intern starts with blue scrubs
-    back: ClothingBackpackMedicalFilled
     shoes: ClothingShoesColorWhite
     id: MedicalInternPDA
     ears: ClothingHeadsetMedical
     belt: ClothingBeltMedicalFilled
     pocket2: BookMedicalReferenceBook
-  # innerClothingSkirt: ClothingUniformJumpskirtColorWhite # DeltaV
-  satchel: ClothingBackpackSatchelMedicalFilled
-  duffelbag: ClothingBackpackDuffelMedicalFilled
+  #storage:
+    #back:
+    #- Stuff

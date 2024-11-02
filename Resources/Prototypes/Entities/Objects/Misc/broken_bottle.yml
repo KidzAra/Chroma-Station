@@ -5,18 +5,13 @@
   description: In Space Glasgow this is called a conversation starter.
   components:
   - type: Sharp
+  - type: Execution
+    doAfterDuration: 4.0
   - type: MeleeWeapon
-    attackRate: 1.4
-    range: 1.4
+    attackRate: 1.5
     damage:
       types:
-        Slash: 4
-    heavyRateModifier: 0.8
-    heavyRangeModifier: 0.8
-    heavyDamageBaseModifier: 1.5
-    heavyStaminaCost: 5
-    maxTargets: 3
-    angle: 75
+        Slash: 5
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
   - type: Sprite
@@ -33,6 +28,6 @@
     materialComposition:
       Glass: 50
   - type: SpaceGarbage
-  - type: WelderRefinable
+  - type: ToolRefinable
     refineResult:
     - id: SheetGlass1

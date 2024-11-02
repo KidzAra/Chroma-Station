@@ -1,5 +1,5 @@
 using Content.Server.Chat.Systems;
-using Content.Shared.Chat;
+using Content.Shared.Backmen.Chat;
 using Content.Shared.Magic;
 using Content.Shared.Magic.Events;
 
@@ -18,6 +18,14 @@ public sealed class MagicSystem : SharedMagicSystem
 
     private void OnSpellSpoken(ref SpeakSpellEvent args)
     {
+        // // start-backmen: magick
+        // var ev = new Shared.Backmen.Magic.Events.CanUseMagicEvent
+        // {
+        //     User = args.User,
+        // };
+        // if(ev.Cancelled)
+        //     return;
+        // // end-backmen: magick
         _chat.TrySendInGameICMessage(args.Performer, Loc.GetString(args.Speech), InGameICChatType.Speak, false);
     }
 }

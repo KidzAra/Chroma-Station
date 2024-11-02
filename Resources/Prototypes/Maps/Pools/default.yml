@@ -1,18 +1,15 @@
 - type: gameMapPool
   id: DefaultMapPool
   maps:
-  - Arena
-  - Asterisk
+  - Bagel
+  - Box
+  - Cog
   - Core
-  - Edge
-  - Glacier
-  - Hammurabi
-  - Lighthouse
-  - Pebble
-  - Saltern
-  - Shoukou
-  - Submarine
-  - Tortuga
-  - TheHive
-  - Gax
-  - Rad
+  - Fland
+  - Marathon
+  - Meta
+  - Oasis
+  - Omega
+  - Packed
+  - Reach
+  #- Train

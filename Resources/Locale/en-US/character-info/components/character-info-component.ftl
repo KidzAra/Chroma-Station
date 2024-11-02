@@ -1,3 +1,4 @@
-character-info-title = Персонаж
-character-info-roles-antagonist-text = Роли Антагонистов
-character-info-objectives-label = Цели
+character-info-title = Character
+character-info-roles-antagonist-text = Antagonist Roles
+character-info-objectives-label = Objectives
+character-info-no-profession = No Profession

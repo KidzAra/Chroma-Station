@@ -1,16 +1,11 @@
 using System.Linq;
 using Content.Client.Eui;
-using Content.Client.Lobby;
 using Content.Client.Players.PlayTimeTracking;
-using Content.Shared.Clothing.Loadouts.Prototypes;
-using Content.Shared.Customization.Systems;
 using Content.Shared.Eui;
 using Content.Shared.Ghost.Roles;
-using Content.Shared.Preferences;
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
-using Robust.Shared.Configuration;
-using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 
 namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
 {
@@ -88,34 +83,39 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
             var sysManager = entityManager.EntitySysManager;
             var spriteSystem = sysManager.GetEntitySystem<SpriteSystem>();
             var requirementsManager = IoCManager.Resolve<JobRequirementsManager>();
-            var characterReqs = entityManager.System<CharacterRequirementsSystem>();
-            var prefs = IoCManager.Resolve<IClientPreferencesManager>();
-            var protoMan = IoCManager.Resolve<IPrototypeManager>();
-            var configManager = IoCManager.Resolve<IConfigurationManager>();
 
             var groupedRoles = ghostState.GhostRoles.GroupBy(
-                role => (role.Name, role.Description, role.Requirements));
+                role => (role.Name, role.Description, role.Requirements, role.WhitelistRequired)); //backmen: whitelist
+
+            //start-backmen: whitelist
+            var cfg = IoCManager.Resolve<Robust.Shared.Configuration.IConfigurationManager>();
+            //end-backmen: whitelist
+
             foreach (var group in groupedRoles)
             {
                 var name = group.Key.Name;
                 var description = group.Key.Description;
-                // ReSharper disable once ReplaceWithSingleAssignment.True
-                var hasAccess = true;
+                bool hasAccess = true;
+                FormattedMessage? reason;
 
-                if (!characterReqs.CheckRequirementsValid(
-                    group.Key.Requirements ?? new(),
-                    new(),
-                    (HumanoidCharacterProfile) (prefs.Preferences?.SelectedCharacter ?? HumanoidCharacterProfile.DefaultWithSpecies()),
-                    requirementsManager.GetRawPlayTimeTrackers(),
-                    requirementsManager.IsWhitelisted(),
-                    new LoadoutPrototype(), // idk
-                    entityManager,
-                    protoMan,
-                    configManager,
-                    out var reasons))
+                //start-backmen: whitelist
+                if (
+                    group.Key.WhitelistRequired &&
+                    cfg.GetCVar(Shared.Backmen.CCVar.CCVars.WhitelistRolesEnabled) &&
+                    !requirementsManager.IsWhitelisted()
+                    )
+                {
                     hasAccess = false;
+                    reason = FormattedMessage.FromMarkupOrThrow(Loc.GetString("playtime-deny-reason-not-whitelisted"));
+                }
+                else
+                //end-backmen: whitelist
+                if (!requirementsManager.CheckRoleRequirements(group.Key.Requirements, null, out reason))
+                {
+                    hasAccess = false;
+                }
 
-                _window.AddEntry(name, description, hasAccess, characterReqs.GetRequirementsText(reasons), group, spriteSystem);
+                _window.AddEntry(name, description, hasAccess, reason, group, spriteSystem);
             }
 
             var closeRulesWindow = ghostState.GhostRoles.All(role => role.Identifier != _windowRulesId);

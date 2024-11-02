@@ -233,7 +233,7 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     1 mol of Tritium is required per X mol of oxygen.
         /// </summary>
-        public const float FrezonProductionTritRatio = 50.0f;
+        public const float FrezonProductionTritRatio = 8.0f;
 
         /// <summary>
         ///     1 / X of the tritium is converted into Frezon each tick
@@ -271,7 +271,7 @@ namespace Content.Shared.Atmos
         public const float HazardLowPressure = 20f;
 
         /// <summary>
-        ///    ///    The amount of pressure damage someone takes is equal to ((pressure / HAZARD_HIGH_PRESSURE) - 1)*PRESSURE_DAMAGE_COEFFICIENT
+        ///    The amount of pressure damage someone takes is equal to ((pressure / HAZARD_HIGH_PRESSURE) - 1)*PRESSURE_DAMAGE_COEFFICIENT,
         ///     with the maximum of MaxHighPressureDamage.
         /// </summary>
         public const float PressureDamageCoefficient = 4;
@@ -286,7 +286,8 @@ namespace Content.Shared.Atmos
         ///     (The pressure threshold is so low that it doesn't make sense to do any calculations,
         ///     so it just applies this flat value).
         /// </summary>
-        public const int LowPressureDamage = 4;
+        // Original value is 4, buff back when we have proper ways for players to deal with breaches.
+        public const int LowPressureDamage = 4; // Corvax-MRP: Revert from 1 to 4
 
         public const float WindowHeatTransferCoefficient = 0.1f;
 

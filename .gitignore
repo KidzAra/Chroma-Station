@@ -10,6 +10,13 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# Secret
+Secrets
+Resources/Prototypes/CorvaxSecrets
+Resources/Prototypes/CorvaxSecretsServer
+Resources/Textures/CorvaxSecrets
+Resources/Locale/ru-RU/corvax-secrets
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -21,8 +28,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-bin/
-RobustToolbox/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -308,6 +313,4 @@ Resources/MapImages
 
 # Direnv stuff
 .direnv/
-
-# Changelog package lock
-package-lock.json
+RobustToolbox

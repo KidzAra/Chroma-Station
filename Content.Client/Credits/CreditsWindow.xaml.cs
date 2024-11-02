@@ -29,9 +29,9 @@ namespace Content.Client.Credits
 
         private static readonly Dictionary<string, int> PatronTierPriority = new()
         {
-            ["Central Commander"] = 1,
-            ["Captain"] = 2,
-            ["Assistant"] = 3
+            ["Nuclear Operative"] = 1,
+            ["Syndicate Agent"] = 2,
+            ["Revolutionary"] = 3
         };
 
         public CreditsWindow()
@@ -145,7 +145,7 @@ namespace Content.Client.Credits
                 var text = _resourceManager.ContentFileReadAllText($"/Credits/{path}");
                 if (markup)
                 {
-                    label.SetMessage(FormattedMessage.FromMarkup(text.Trim()));
+                    label.SetMessage(FormattedMessage.FromMarkupOrThrow(text.Trim()));
                 }
                 else
                 {
@@ -157,6 +157,7 @@ namespace Content.Client.Credits
 
             AddSection(Loc.GetString("credits-window-contributors-section-title"), "GitHub.txt");
             AddSection(Loc.GetString("credits-window-codebases-section-title"), "SpaceStation13.txt");
+            AddSection(Loc.GetString("credits-window-tts-title"), "TTS.txt"); // Corvax-TTS
             AddSection(Loc.GetString("credits-window-original-remake-team-section-title"), "OriginalRemake.txt");
             AddSection(Loc.GetString("credits-window-special-thanks-section-title"), "SpecialThanks.txt", true);
 

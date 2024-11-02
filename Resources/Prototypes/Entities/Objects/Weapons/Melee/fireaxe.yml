@@ -1,6 +1,6 @@
 - type: entity
   name: fireaxe
-  parent: BaseItem
+  parent: [BaseItem, BaseEngineeringContraband]
   id: FireAxe
   description: Truly, the weapon of a madman. Who would think to fight fire with an axe?
   components:
@@ -8,6 +8,8 @@
     tags:
     - FireAxe
   - type: Sharp
+  - type: Execution
+    doAfterDuration: 4.0
   - type: Sprite
     sprite: Objects/Weapons/Melee/fireaxe.rsi
     state: icon
@@ -18,20 +20,16 @@
     damage:
       types:
         # axes are kinda like sharp hammers, you know?
-        Blunt: 4
-        Slash: 6
+        Blunt: 5
+        Slash: 10
         Structural: 10
-    heavyDamageBaseModifier: 1.0
-    heavyStaminaCost: 10
-    angle: 100
     soundHit:
       collection: MetalThud
   - type: Wieldable
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 2
-        Slash: 5
+        Slash: 10
         Structural: 40
   - type: Item
     size: Ginormous
@@ -43,7 +41,7 @@
   - type: Tool
     qualities:
       - Prying
-      - Axing
+      - AdvancedPrying # White Dream
   - type: ToolTileCompatible
   - type: Prying
   - type: UseDelay
@@ -56,7 +54,7 @@
 - type: entity
   id: FireAxeFlaming
   name: fire axe
-  parent: FireAxe
+  parent: [BaseSyndicateContraband, FireAxe]
   description: Why fight fire with an axe when you can fight with fire and axe? Now featuring rugged rubberized handle!
   components:
   - type: MeleeWeapon
@@ -71,3 +69,18 @@
     quickEquip: false
     slots:
     - back
+# Corvax-HiddenDesc-Start
+  - type: HiddenDescription
+    entries:
+    - label: corvax-hidden-desc-FireAxeFlaming-syndicate
+      whitelistMind:
+        components:
+          - TraitorRole
+          - NukeOperative
+    - label: corvax-hidden-desc-FireAxeFlaming-research
+      jobRequired:
+        - ResearchAssistant
+        - ResearchDirector
+        - Scientist
+        - Borg
+# Corvax-HiddenDesc-End

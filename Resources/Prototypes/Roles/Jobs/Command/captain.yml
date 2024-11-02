@@ -1,29 +1,25 @@
-- type: job
+﻿- type: job
   id: Captain
-  name: Капитан
+  name: job-name-captain
   description: job-description-captain
   playTimeTracker: JobCaptain
   requirements:
-    - !type:CharacterDepartmentTimeRequirement
-      department: Logistics # DeltaV - Logistics Department replacing Cargo
-      min: 18000 # DeltaV - 5 hours
-    - !type:CharacterDepartmentTimeRequirement
+    - !type:DepartmentTimeRequirement
       department: Engineering
-      min: 18000 # DeltaV - 5 hours
-    - !type:CharacterDepartmentTimeRequirement
+      time: 72000 #20 hrs # Corvax-RoleTime
+    - !type:DepartmentTimeRequirement
       department: Medical
-      min: 18000 # DeltaV - 5 hours
-    - !type:CharacterDepartmentTimeRequirement
+      time: 72000 #20 hrs # Corvax-RoleTime
+    - !type:DepartmentTimeRequirement
       department: Security
-      min: 18000 # DeltaV - 5 hours
-    - !type:CharacterDepartmentTimeRequirement # DeltaV - Epistemics dept time requirement
-      department: Epistemics # DeltaV - Epistemics Department replacing Science
-      min: 18000 # 5 hours
-    - !type:CharacterDepartmentTimeRequirement
-      department: Command
-      min: 108000 # DeltaV - 30 hours
-    - !type:CharacterOverallTimeRequirement # DeltaV - Playtime requirement
-      min: 108000 # 30 hours
+      time: 72000 #20 hrs # Corvax-RoleTime
+#    - !type:DepartmentTimeRequirement
+#      department: Command
+#      time: 54000 # 15 hours
+    - !type:OverallPlaytimeRequirement
+      time: 504000 #140 hrs # Corvax-RoleTime
+    - !type:AgeRequirement
+      requiredAge: 21
   weight: 20
   startingGear: CaptainGear
   icon: "JobIconCaptain"
@@ -33,67 +29,35 @@
   canBeAntag: false
   accessGroups:
   - AllAccess
+  #start-backmen: currency
+  minBankBalance: 400
+  maxBankBalance: 600
+  wageDepartment: Command
+  wage: 100
+  #end-backmen: currency
   special:
+  - !type:AddComponentSpecial
+    components:
+      - type: PsionicBonusChance
+        flatBonus: 0.025
+      - type: NpcFactionMember
+        factions:
+          - CentralCommand
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-
-- type: job
-  id: BlueShit
-  name: Офицер Синего Щита
-  description: Ну... Он хотя бы пытался.
-  playTimeTracker: JobBS
-  requirements:
-    - !type:CharacterDepartmentTimeRequirement
-      department: Medical
-      min: 18000 # DeltaV - 5 hours
-    - !type:CharacterDepartmentTimeRequirement
-      department: Security
-      min: 18000 # DeltaV - 5 hours
-    - !type:CharacterOverallTimeRequirement # DeltaV - Playtime requirement
-      min: 108000 # 30 hours
-  weight: 20
-  startingGear: BSGear
-  icon: "JobIconNanotrasen"
-  requireAdminNotify: true
-  joinNotifyCrew: true
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant ]
-  - !type:AddComponentSpecial
-    components:
-      - type: CommandStaff
-
-- type: startingGear
-  id: BSGear
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitBlueShit
-    back: ClothingBackpackSecurity
-    shoes: ClothingShoesBootsCombatFilled
-    head: ClothingHeadHatBeretBlueShit
-    eyes: ClothingEyesGlassesSunglasses
-    outerClothing: ClothingOuterArmorBasic
-    id: BlueShitPDA
-    ears: ClothingHeadsetAltCommand
 
 - type: startingGear
   id: CaptainGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitCaptain
-    back: ClothingBackpackCaptainFilled
     shoes: ClothingShoesBootsLaceup
-    head: ClothingHeadHatCaptain
     eyes: ClothingEyesGlassesSunglasses
     gloves: ClothingHandsGlovesCaptain
-    outerClothing: ClothingOuterArmorCaptainCarapace
     id: CaptainPDA
     ears: ClothingHeadsetAltCommand
-  innerClothingSkirt: ClothingUniformJumpskirtCaptain
-  satchel: ClothingBackpackSatchelCaptainFilled
-  duffelbag: ClothingBackpackDuffelCaptainFilled
+  storage:
+    back:
+    - Flash
+    # - StationCharter

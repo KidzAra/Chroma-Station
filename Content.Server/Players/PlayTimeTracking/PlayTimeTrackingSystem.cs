@@ -4,10 +4,11 @@ using Content.Server.Administration.Managers;
 using Content.Server.Afk;
 using Content.Server.Afk.Events;
 using Content.Server.GameTicking;
+using Content.Server.GameTicking.Events;
 using Content.Server.Mind;
 using Content.Server.Preferences.Managers;
+using Content.Server.Station.Events;
 using Content.Shared.CCVar;
-using Content.Shared.Customization.Systems;
 using Content.Shared.GameTicking;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
@@ -15,7 +16,6 @@ using Content.Shared.Players;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
-using Robust.Server.GameObjects;
 using Robust.Server.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
@@ -30,17 +30,20 @@ namespace Content.Server.Players.PlayTimeTracking;
 /// </summary>
 public sealed class PlayTimeTrackingSystem : EntitySystem
 {
+    [Dependency] private readonly IAdminManager _adminManager = default!;
     [Dependency] private readonly IAfkManager _afk = default!;
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly MindSystem _minds = default!;
     [Dependency] private readonly PlayTimeTrackingManager _tracking = default!;
-    [Dependency] private readonly IAdminManager _adminManager = default!;
-    [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
-    [Dependency] private readonly IServerPreferencesManager _prefs = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
+    [Dependency] private readonly Backmen.RoleWhitelist.WhitelistSystem _roleWhitelist = default!; // backmen: whitelist
 
+    [Dependency]
+    private readonly Content.Corvax.Interfaces.Shared.ISharedSponsorsManager _sponsorsManager = default!; // backmen: allRoles
+
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
+    [Dependency] private readonly IServerPreferencesManager _preferencesManager = default!;
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    [Dependency] private readonly SharedRoleSystem _roles = default!;
 
     public override void Initialize()
     {
@@ -57,6 +60,9 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
         SubscribeLocalEvent<UnAFKEvent>(OnUnAFK);
         SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
         SubscribeLocalEvent<PlayerJoinedLobbyEvent>(OnPlayerJoinedLobby);
+        SubscribeLocalEvent<StationJobsGetCandidatesEvent>(OnStationJobsGetCandidates);
+        SubscribeLocalEvent<IsJobAllowedEvent>(OnIsJobAllowed);
+        SubscribeLocalEvent<GetDisallowedJobsEvent>(OnGetDisallowedJobs);
         _adminManager.OnPermsChanged += AdminPermsChanged;
     }
 
@@ -101,10 +107,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
 
     public IEnumerable<string> GetTimedRoles(EntityUid mindId)
     {
-        var ev = new MindGetAllRolesEvent(new List<RoleInfo>());
-        RaiseLocalEvent(mindId, ref ev);
-
-        foreach (var role in ev.Roles)
+        foreach (var role in _roles.MindGetAllRoleInfo(mindId))
         {
             if (string.IsNullOrWhiteSpace(role.PlayTimeTrackerId))
                 continue;
@@ -179,82 +182,79 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
         _tracking.QueueRefreshTrackers(ev.PlayerSession);
         // Send timers to client when they join lobby, so the UIs are up-to-date.
         _tracking.QueueSendTimers(ev.PlayerSession);
-        _tracking.QueueSendWhitelist(ev.PlayerSession); // Nyanotrasen - Send whitelist status
+    }
+
+    private void OnStationJobsGetCandidates(ref StationJobsGetCandidatesEvent ev)
+    {
+        RemoveDisallowedJobs(ev.Player, ev.Jobs);
+    }
+
+    private void OnIsJobAllowed(ref IsJobAllowedEvent ev)
+    {
+        if (!IsAllowed(ev.Player, ev.JobId))
+            ev.Cancelled = true;
+    }
+
+    private void OnGetDisallowedJobs(ref GetDisallowedJobsEvent ev)
+    {
+        ev.Jobs.UnionWith(GetDisallowedJobs(ev.Player));
     }
 
     public bool IsAllowed(ICommonSession player, string role)
     {
         if (!_prototypes.TryIndex<JobPrototype>(role, out var job) ||
-            job.Requirements == null ||
             !_cfg.GetCVar(CCVars.GameRoleTimers))
             return true;
 
+        //start-backmen: allRoles
+        if (_sponsorsManager.IsServerAllRoles(player.UserId))
+            return true;
+        //end-backmen
+
         if (!_tracking.TryGetTrackerTimes(player, out var playTimes))
         {
             Log.Error($"Unable to check playtimes {Environment.StackTrace}");
             playTimes = new Dictionary<string, TimeSpan>();
         }
 
-        var isWhitelisted = player.ContentData()?.Whitelisted ?? false; // DeltaV - Whitelist requirement
-
-        return _characterRequirements.CheckRequirementsValid(
-            job.Requirements,
-            job,
-            (HumanoidCharacterProfile) _prefs.GetPreferences(player.UserId).SelectedCharacter,
-            playTimes,
-            isWhitelisted,
-            job,
-            EntityManager,
-            _prototypes,
-            _config,
-            out _);
+        return JobRequirements.TryRequirementsMet(job, playTimes, out _, EntityManager, _prototypes, (HumanoidCharacterProfile?) _preferencesManager.GetPreferences(player.UserId).SelectedCharacter);
     }
 
-    public HashSet<string> GetDisallowedJobs(ICommonSession player)
+    public HashSet<ProtoId<JobPrototype>> GetDisallowedJobs(ICommonSession player)
     {
-        var roles = new HashSet<string>();
+        var roles = new HashSet<ProtoId<JobPrototype>>();
         if (!_cfg.GetCVar(CCVars.GameRoleTimers))
             return roles;
 
+        //start-backmen: allRoles
+        if (_sponsorsManager.IsServerAllRoles(player.UserId))
+            return roles;
+        //end-backmen
+
         if (!_tracking.TryGetTrackerTimes(player, out var playTimes))
         {
             Log.Error($"Unable to check playtimes {Environment.StackTrace}");
             playTimes = new Dictionary<string, TimeSpan>();
         }
 
-        var isWhitelisted = player.ContentData()?.Whitelisted ?? false; // DeltaV - Whitelist requirement
-
         foreach (var job in _prototypes.EnumeratePrototypes<JobPrototype>())
         {
-            if (job.Requirements != null)
-            {
-                if (_characterRequirements.CheckRequirementsValid(
-                        job.Requirements,
-                        job,
-                        (HumanoidCharacterProfile) _prefs.GetPreferences(player.UserId).SelectedCharacter,
-                        playTimes,
-                        isWhitelisted,
-                        job,
-                        EntityManager,
-                        _prototypes,
-                        _config,
-                        out _))
-                    continue;
-
-                goto NoRole;
-            }
-
-            roles.Add(job.ID);
-            NoRole:;
+            if (JobRequirements.TryRequirementsMet(job, playTimes, out _, EntityManager, _prototypes, (HumanoidCharacterProfile?) _preferencesManager.GetPreferences(player.UserId).SelectedCharacter))
+                roles.Add(job.ID);
         }
 
         return roles;
     }
 
-    public void RemoveDisallowedJobs(NetUserId userId, ref List<string> jobs)
+    public void RemoveDisallowedJobs(NetUserId userId, List<ProtoId<JobPrototype>> jobs)
     {
         if (!_cfg.GetCVar(CCVars.GameRoleTimers))
             return;
+
+        //start-backmen: allRoles
+        if (_sponsorsManager.IsServerAllRoles(userId))
+            return;
+        //end-backmen
 
         var player = _playerManager.GetSessionById(userId);
         if (!_tracking.TryGetTrackerTimes(player, out var playTimes))
@@ -264,32 +264,16 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
             playTimes ??= new Dictionary<string, TimeSpan>();
         }
 
-        var isWhitelisted = player.ContentData()?.Whitelisted ?? false; // DeltaV - Whitelist requirement
-
         for (var i = 0; i < jobs.Count; i++)
         {
-            var job = jobs[i];
-
-            if (!_prototypes.TryIndex<JobPrototype>(job, out var jobber) ||
-                jobber.Requirements == null ||
-                jobber.Requirements.Count == 0)
-                continue;
-
-            if (!_characterRequirements.CheckRequirementsValid(
-                jobber.Requirements,
-                jobber,
-                (HumanoidCharacterProfile) _prefs.GetPreferences(userId).SelectedCharacter,
-                _tracking.GetPlayTimes(_playerManager.GetSessionById(userId)),
-                _playerManager.GetSessionById(userId).ContentData()?.Whitelisted ?? false,
-                jobber,
-                EntityManager,
-                _prototypes,
-                _config,
-                out _))
+            if (_prototypes.TryIndex(jobs[i], out var job)
+                && JobRequirements.TryRequirementsMet(job, playTimes, out _, EntityManager, _prototypes, (HumanoidCharacterProfile?) _preferencesManager.GetPreferences(userId).SelectedCharacter))
             {
-                jobs.RemoveSwap(i);
-                i--;
+                continue;
             }
+
+            jobs.RemoveSwap(i);
+            i--;
         }
     }
 

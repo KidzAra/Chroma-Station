@@ -18,12 +18,6 @@
     - type: Tag
       tags:
       - Spellbook
-    - type: EmitSoundOnPickup
-      sound: /Audio/SimpleStation14/Items/Handling/book_pickup.ogg
-    - type: EmitSoundOnDrop
-      sound: /Audio/SimpleStation14/Items/Handling/book_drop.ogg
-    - type: EmitSoundOnLand
-      sound: /Audio/SimpleStation14/Items/Handling/book_drop.ogg
 
 # For the Wizard Antag
 # Do not add discounts or price inflation
@@ -31,7 +25,7 @@
   id: WizardsGrimoire
   name: wizards grimoire
   suffix: Wizard
-  parent: BaseItem
+  parent: [ BaseItem, StorePresetSpellbook ]
   components:
     - type: Sprite
       sprite: Objects/Misc/books.rsi
@@ -52,7 +46,6 @@
     - type: Store
       refundAllowed: true
       ownerOnly: true # get your own tome!
-      preset: StorePresetSpellbook
       balance:
         WizCoin: 10 # prices are balanced around this 10 point maximum and how strong the spells are
 
@@ -61,18 +54,17 @@
   id: WizardsGrimoireNoRefund
   name: wizards grimoire
   suffix: Wizard, No Refund
-  parent: WizardsGrimoire
+  parent: [ WizardsGrimoire, StorePresetSpellbook ]
   components:
     - type: Store
       refundAllowed: false
       ownerOnly: true # get your own tome!
-      preset: StorePresetSpellbook
       balance:
         WizCoin: 10 # prices are balanced around this 10 point maximum and how strong the spells are
 
 - type: entity
   id: SpawnSpellbook
-  name: Книга заклинания карпа
+  name: spawn spellbook
   parent: BaseSpellbook
   components:
     - type: Spellbook
@@ -81,7 +73,7 @@
 
 - type: entity
   id: ForceWallSpellbook
-  name: Книга заклинания силовой стенки
+  name: force wall spellbook
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -100,11 +92,11 @@
         color: gold
     - type: Spellbook
       spellActions:
-        ActionForceWallY: -1
+        ActionForceWall: -1
 
 - type: entity
   id: BlinkBook
-  name: Книга заклинания перемещения
+  name: blink spellbook
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -121,11 +113,11 @@
         color: gold
     - type: Spellbook
       spellActions:
-        ActionBlinkY: -1
+        ActionBlink: -1
 
 - type: entity
   id: SmiteBook
-  name: Книга заклинания распотрашения
+  name: smite spellbook
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -148,7 +140,7 @@
 
 - type: entity
   id: KnockSpellbook
-  name: Книга Заклинания стука
+  name: knock spellbook
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -166,11 +158,11 @@
         color: "#98c495"
     - type: Spellbook
       spellActions:
-        ActionKnockY: -1
+        ActionKnock: -1
 
 - type: entity
   id: FireballSpellbook
-  name: Книга заклинания огненного шара
+  name: fireball spellbook
   parent: BaseSpellbook
   components:
     - type: Sprite
@@ -190,45 +182,7 @@
         shader: unshaded
     - type: Spellbook
       spellActions:
-        ActionFireballY: -1
-
-- type: entity
-  id: PortalSpellbook
-  name: Книга заклинания портала
-  parent: BaseSpellbook
-  components:
-    - type: Sprite
-      sprite: Objects/Misc/books.rsi
-      layers:
-      - state: paper
-      - state: cover_strong
-        color: "#2c733d"
-      - state: decor_wingette_circle
-        color: green
-    - type: Spellbook
-      spellActions:
-        ActionWarping: -1
-
-- type: entity
-  id: GolemSpellbook
-  name: Книга заклинания голема
-  parent: BaseSpellbook
-  components:
-    - type: Sprite
-      sprite: Objects/Misc/books.rsi
-      layers:
-      - state: paper
-      - state: cover_old
-        color: "#525252"
-      - state: decor_wingette_circle
-        color: black
-      - state: detail_rivets
-        color: gray
-      - state: detail_bookmark
-        color: "#292929"
-    - type: Spellbook
-      spellActions:
-        ActionSpawnGolem: -1
+        ActionFireball: -1
 
 - type: entity
   id: ScrollRunes

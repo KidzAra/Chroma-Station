@@ -1,3 +1,6 @@
-﻿defaultWindowTitle: Einstein Engines
-windowIconSet: /Textures/Logo/icon
-splashLogo: /Textures/Logo/splashlogo.png
+defaultWindowTitle: Space Station 14 - Backmen Station [RU]
+windowIconSet: /Textures/Logo/icon-ru # Corvax-Theme
+splashLogo: /Textures/Logo/logo-ru.png # Corvax-Theme
+#multiWindow: true
+
+# PJB PLEASE

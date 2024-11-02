@@ -127,6 +127,13 @@
     Plastic: 500
 
 - type: latheRecipe
+  id: ClothingShoesBootsMoon
+  result: ClothingShoesBootsMoon
+  completetime: 2
+  materials:
+    Steel: 600
+
+- type: latheRecipe
   id: ClothingShoesBootsSpeed
   result: ClothingShoesBootsSpeed
   completetime: 2
@@ -193,6 +200,13 @@
     Steel: 100
 
 - type: latheRecipe
+  id: FloorRedCircuit
+  result: FloorTileItemRCircuit4
+  completetime: 2
+  materials:
+    Steel: 100
+
+- type: latheRecipe
   id: HandheldStationMap
   result: HandheldStationMapEmpty
   completetime: 2
@@ -209,17 +223,8 @@
     Glass: 200
 
 - type: latheRecipe
-  id: ClothingShoesBootsMagAdv
-  result: ClothingShoesBootsMagAdv
-  completetime: 12
+  id: ClothingHeadHatCone
+  result: ClothingHeadHatCone
+  completetime: 3
   materials:
-    Silver: 1000
-    Gold: 500
-
-- type: latheRecipe
-  id: MailCapsule
-  result: MailCapsulePrimed
-  completetime: 1
-  materials:
-    Glass: 100
-    Plastic: 100
+    Plastic: 200

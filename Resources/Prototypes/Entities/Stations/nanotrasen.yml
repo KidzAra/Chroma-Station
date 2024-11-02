@@ -1,4 +1,4 @@
-﻿- type: entity
+- type: entity
   abstract: true
   id: BaseStationNanotrasen
   components:
@@ -10,6 +10,7 @@
   id: StandardNanotrasenStation
   parent:
     - BaseStation
+    - BaseStationGoal # Corvax
     - BaseStationNews
     - BaseStationCargo
     - BaseStationJobsSpawning
@@ -25,9 +26,7 @@
     - BaseStationSiliconLawCrewsimov
     - BaseStationAllEventsEligible
     - BaseStationNanotrasen
-    - BaseRandomStation
-    - BaseStationMail # Nyano component, required for station mail to function
-  noSpawn: true
+  categories: [ HideSpawnMenu ]
   components:
     - type: Transform
 
@@ -37,7 +36,13 @@
     - BaseStation
     - BaseStationAlertLevels
     - BaseStationNanotrasen
-  noSpawn: true
+    - BaseStationCargo #Backmen
+    - BaseStationJobsSpawning #Backmen
+    - BaseStationRecords #Backmen
+    - BaseStationShuttles #Backmen
+    - BaseStationExpeditions #Backmen
+    - BaseStationMagnet #Backmen
+  categories: [ HideSpawnMenu ]
   components:
     - type: Transform
 
@@ -48,6 +53,6 @@
   - BaseStationJobsSpawning
   - BaseStationRecords
   - BaseStationNanotrasen
-  noSpawn: true
+  categories: [ HideSpawnMenu ]
   components:
     - type: Transform

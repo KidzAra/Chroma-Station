@@ -29,15 +29,10 @@
           state: "smes-op1"
           shader: unshaded
     - type: Smes
-    - type: UpgradeBattery
-      maxChargeMultiplier: 2
-      baseMaxCharge: 8000000
-    - type: UpgradePowerSupplyRamping
-      scaling: Linear
-      supplyRampingMultiplier: 1     
     - type: Appearance
     - type: Battery
       startingCharge: 0
+      maxCharge: 8000000
     - type: ExaminableBattery
     - type: NodeContainer
       examinable: true
@@ -83,8 +78,8 @@
       highVoltageNode: input
       mediumVoltageNode: output
     - type: Damageable
-      damageContainer: Inorganic
-      damageModifierSet: StrongMetallic
+      damageContainer: StructuralInorganic
+      damageModifierSet: StructuralMetallicStrong
     - type: BatterySensor
     - type: DeviceNetwork
       deviceNetId: AtmosDevices
@@ -100,7 +95,7 @@
 - type: entity
   parent: BaseSMES
   id: SMESBasic
-  suffix: Basic, 8MW
+  suffix: Basic, 8MJ
   components:
   - type: Battery
     maxCharge: 8000000

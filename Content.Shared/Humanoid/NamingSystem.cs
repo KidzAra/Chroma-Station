@@ -29,24 +29,19 @@ namespace Content.Shared.Humanoid
                 case SpeciesNaming.First:
                     return Loc.GetString("namepreset-first",
                         ("first", GetFirstName(speciesProto, gender)));
-                // Start of Nyano - Summary: for Oni naming
-                case SpeciesNaming.LastNoFirst:
-                    return Loc.GetString("namepreset-lastnofirst",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
-                // End of Nyano - Summary: for Oni naming
                 case SpeciesNaming.TheFirstofLast:
                     return Loc.GetString("namepreset-thefirstoflast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
+                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto, gender))); // Corvax-LastnameGender
                 case SpeciesNaming.FirstDashFirst:
                     return Loc.GetString("namepreset-firstdashfirst",
                         ("first1", GetFirstName(speciesProto, gender)), ("first2", GetFirstName(speciesProto, gender)));
-                case SpeciesNaming.FirstDashLast:
-                    return Loc.GetString("namepreset-firstdashlast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
+                case SpeciesNaming.XnoY:
+                    return Loc.GetString("namepreset-x-no-y",
+                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto))); //backmen:oni
                 case SpeciesNaming.FirstLast:
                 default:
                     return Loc.GetString("namepreset-firstlast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
+                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto, gender))); // Corvax-LastnameGender
             }
         }
 
@@ -66,9 +61,22 @@ namespace Content.Shared.Humanoid
             }
         }
 
-        public string GetLastName(SpeciesPrototype speciesProto)
+        // Corvax-LastnameGender-Start: Added custom gender split logic
+        public string GetLastName(SpeciesPrototype speciesProto, Gender? gender = null)
         {
-            return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.LastNames).Values);
+            switch (gender)
+            {
+                case Gender.Male:
+                    return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.MaleLastNames).Values);
+                case Gender.Female:
+                    return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.FemaleLastNames).Values);
+                default:
+                    if (_random.Prob(0.5f))
+                        return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.MaleLastNames).Values);
+                    else
+                        return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.FemaleLastNames).Values);
+            }
         }
+        // Corvax-LastnameGender-End
     }
 }

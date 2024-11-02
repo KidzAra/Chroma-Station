@@ -13,17 +13,20 @@
   extendedAccess:
   - Kitchen
   - Bar
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Civilian
+  wage: 50
+  #end-backmen: currency
 
 - type: startingGear
   id: BotanistGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitHydroponics
-    back: ClothingBackpackHydroponicsFilled
     shoes: ClothingShoesColorBrown
     id: BotanistPDA
     ears: ClothingHeadsetService
-    outerClothing: ClothingOuterApronBotanist
     belt: ClothingBeltPlantFilled
-  innerClothingSkirt: ClothingUniformJumpskirtHydroponics
-  satchel: ClothingBackpackSatchelHydroponicsFilled
-  duffelbag: ClothingBackpackDuffelHydroponicsFilled
+  #storage:
+    #back:
+    #- Stuff

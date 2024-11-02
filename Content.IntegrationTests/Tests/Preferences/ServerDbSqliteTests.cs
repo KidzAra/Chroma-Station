@@ -3,8 +3,9 @@ using System.Linq;
 using Content.Server.Database;
 using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
-using Content.Shared.Humanoid.Markings;
 using Content.Shared.Preferences;
+using Content.Shared.Preferences.Loadouts;
+using Content.Shared.Preferences.Loadouts.Effects;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Robust.Shared.Configuration;
@@ -32,18 +33,23 @@ namespace Content.IntegrationTests.Tests.Preferences
   - Aaliyah
 
 - type: dataset
-  id: sqlite_test_names_last
+  id: sqlite_test_names_last_male
   values:
-  - Ackerley";
+  - Ackerley
+
+- type: dataset
+  id: sqlite_test_names_last_female
+  values:
+  - Ackerla";  // Corvax-LastnameGender
 
         private static HumanoidCharacterProfile CharlieCharlieson()
         {
-            return new HumanoidCharacterProfile
+            return new()
             {
                 Name = "Charlie Charlieson",
                 FlavorText = "The biggest boy around.",
                 Species = "Human",
-                Customspeciename = "",
+                Voice = "Eugene", // Corvax-TTS
                 Age = 21,
                 Appearance = new(
                     "Afro",
@@ -52,7 +58,7 @@ namespace Content.IntegrationTests.Tests.Preferences
                     Color.Aquamarine,
                     Color.Azure,
                     Color.Beige,
-                    new List<Marking>()),
+                    new ())
             };
         }
 

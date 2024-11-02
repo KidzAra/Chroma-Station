@@ -1,13 +1,12 @@
 using System.Linq;
 using Content.Server.Cargo.Components;
-using Content.Server.Construction;
-using Content.Server.Paper;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Station.Components;
 using Content.Shared.Cargo;
 using Content.Shared.Cargo.Components;
 using Content.Shared.DeviceLinking;
+using Content.Shared.Power;
 using Robust.Shared.Audio;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
@@ -19,8 +18,6 @@ public sealed partial class CargoSystem
     private void InitializeTelepad()
     {
         SubscribeLocalEvent<CargoTelepadComponent, ComponentInit>(OnInit);
-        SubscribeLocalEvent<CargoTelepadComponent, RefreshPartsEvent>(OnRefreshParts);
-        SubscribeLocalEvent<CargoTelepadComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         SubscribeLocalEvent<CargoTelepadComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<CargoTelepadComponent, PowerChangedEvent>(OnTelepadPowerChange);
         // Shouldn't need re-anchored event
@@ -112,17 +109,6 @@ public sealed partial class CargoSystem
     private void OnInit(EntityUid uid, CargoTelepadComponent telepad, ComponentInit args)
     {
         _linker.EnsureSinkPorts(uid, telepad.ReceiverPort);
-    }
-
-    private void OnRefreshParts(EntityUid uid, CargoTelepadComponent component, RefreshPartsEvent args)
-    {
-        var rating = args.PartRatings[component.MachinePartTeleportDelay] - 1;
-        component.Delay = component.BaseDelay * MathF.Pow(component.PartRatingTeleportDelay, rating);
-    }
-
-    private void OnUpgradeExamine(EntityUid uid, CargoTelepadComponent component, UpgradeExamineEvent args)
-    {
-        args.AddPercentageUpgrade("cargo-telepad-delay-upgrade", component.Delay / component.BaseDelay);
     }
 
     private void OnShutdown(Entity<CargoTelepadComponent> ent, ref ComponentShutdown args)

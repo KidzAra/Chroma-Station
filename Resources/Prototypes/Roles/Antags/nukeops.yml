@@ -5,11 +5,14 @@
   setPreference: true
   objective: roles-antag-nuclear-operative-objective
   requirements:
-  - !type:CharacterOverallTimeRequirement
-    min: 108000 # DeltaV - 30 hours
-  - !type:CharacterDepartmentTimeRequirement # DeltaV - Security dept time requirement
+  - !type:OverallPlaytimeRequirement
+    time: 54000 # 15h # Corvax-RoleTime
+  - !type:DepartmentTimeRequirement
     department: Security
-    min: 36000 # DeltaV - 10 hours
+    time: 18000 # 5h # Corvax-RoleTime
+  guides: [ NuclearOperatives ]
+  discordRequired: true # backmen: antag
+
 
 - type: antag
   id: NukeopsMedic
@@ -18,11 +21,16 @@
   setPreference: true
   objective: roles-antag-nuclear-operative-agent-objective
   requirements:
-  - !type:CharacterOverallTimeRequirement
-    min: 108000 #  30 hours
-  - !type:CharacterDepartmentTimeRequirement
-    department: Medical
-    min: 36000 # 10 hours
+  - !type:OverallPlaytimeRequirement
+    time: 54000 # 15h # Corvax-RoleTime
+  - !type:RoleTimeRequirement
+    role: JobChemist
+    time: 36000 # 10h # Corvax-RoleTime
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000 # 10h # Corvax-RoleTime
+  guides: [ NuclearOperatives ]
+  discordRequired: true # backmen: antag
 
 - type: antag
   id: NukeopsCommander
@@ -31,22 +39,20 @@
   setPreference: true
   objective: roles-antag-nuclear-operative-commander-objective
   requirements:
-  - !type:CharacterOverallTimeRequirement
-    min: 216000 # DeltaV - 60 hours
-  - !type:CharacterDepartmentTimeRequirement # DeltaV - Security dept time requirement
+  - !type:OverallPlaytimeRequirement
+    time: 108000 # 30h # Corvax-RoleTime
+  - !type:DepartmentTimeRequirement
     department: Security
-    min: 36000 # DeltaV - 10 hours
-  - !type:CharacterDepartmentTimeRequirement # DeltaV - Command dept time requirement
-    department: Command
-    min: 36000 # DeltaV - 10 hours
-  - !type:CharacterWhitelistRequirement
+    time: 54000 # 15h # Corvax-RoleTime
+  # should be changed to nukie playtime when thats tracked (wyci)
+  guides: [ NuclearOperatives ]
+  discordRequired: true # backmen: antag
 
-#Lone Operative Gear
 - type: startingGear
-  id: SyndicateLoneOperativeGearFull
+  id: SyndicateOperativeGearFullNoUplink
   equipment:
     jumpsuit: ClothingUniformJumpsuitOperative
-    back: ClothingBackpackDuffelSyndicateOperative
+    back: ClothingBackpackDuffelSyndicate
     mask: ClothingMaskGasSyndicate
     eyes: ClothingEyesHudSyndicate
     ears: ClothingHeadsetAltSyndicate
@@ -54,9 +60,56 @@
     outerClothing: ClothingOuterHardsuitSyndie
     shoes: ClothingShoesBootsCombatFilled
     id: SyndiPDA
-    pocket1: DoubleEmergencyOxygenTankFilled
-    pocket2: BaseUplinkRadio40TC
+    pocket2: PlushieCarp
     belt: ClothingBeltMilitaryWebbing
-  innerClothingSkirt: ClothingUniformJumpskirtOperative
-  satchel: ClothingBackpackDuffelSyndicateOperative
-  duffelbag: ClothingBackpackDuffelSyndicateOperative
+  storage:
+    back:
+    - WeaponPistolViper
+    - PinpointerSyndicateNuclear
+    - DeathAcidifierImplanter
+
+#Nuclear Operative Gear
+- type: startingGear
+  id: SyndicateOperativeGearFull
+  parent: SyndicateOperativeGearFullNoUplink
+  equipment:
+    pocket2: BaseUplinkRadio40TC
+
+#Nuclear Operative Commander Gear
+- type: startingGear
+  id: SyndicateCommanderGearFull
+  parent: SyndicateOperativeGearFull
+  equipment:
+    neck: SyndicateWhistle
+    outerClothing: ClothingOuterHardsuitSyndieCommander
+  inhand:
+  - NukeOpsDeclarationOfWar
+
+#Nuclear Operative Medic Gear
+- type: startingGear
+  id: SyndicateOperativeMedicFull
+  parent: SyndicateOperativeGearFull
+  equipment:
+    eyes: ClothingEyesHudSyndicateAgent
+    outerClothing: ClothingOuterHardsuitSyndieMedic
+    shoes: ClothingShoesBootsMagSyndie
+    id: SyndiAgentPDA
+    belt: ClothingBeltMilitaryWebbingMedFilled
+  storage:
+    back:
+    - SyndiHypo
+    - SawAdvanced
+    - Cautery
+    - CombatKnife
+    - WeaponPistolViper
+    - PinpointerSyndicateNuclear
+    - HandheldHealthAnalyzer
+    - CombatMedipen
+    - DeathAcidifierImplanter
+
+#Lone Operative Gear
+- type: startingGear
+  id: SyndicateLoneOperativeGearFull
+  parent: SyndicateOperativeGearFull
+  equipment:
+    pocket2: BaseUplinkRadio60TC

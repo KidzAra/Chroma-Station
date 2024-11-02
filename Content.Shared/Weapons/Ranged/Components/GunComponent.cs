@@ -1,6 +1,3 @@
-using Content.Shared.Damage;
-using Content.Shared.Nyanotrasen.Abilities.Oni;
-using Content.Shared.Tag;
 using Content.Shared.Weapons.Ranged.Events;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Audio;
@@ -11,7 +8,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 namespace Content.Shared.Weapons.Ranged.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
-[Access(typeof(SharedGunSystem), typeof(SharedOniSystem))] // DeltaV - I didn't feel like rewriting big chunks of code
+[Access(typeof(SharedGunSystem))]
 public sealed partial class GunComponent : Component
 {
     #region Sound
@@ -235,18 +232,6 @@ public sealed partial class GunComponent : Component
     /// </summary>
     [DataField]
     public bool ClumsyProof = false;
-
-    /// <summary>
-    ///     The percentage chance of a given gun to accidentally discharge if violently thrown into a wall or person
-    /// </summary>
-    [DataField]
-    public float FireOnDropChance = 0.1f;
-
-    /// <summary>
-    ///     Whether or not this gun is truly Recoilless, such as Lasers, and therefore shouldn't move the user.
-    /// </summary>
-    [DataField]
-    public bool DoRecoil = true;
 }
 
 [Flags]

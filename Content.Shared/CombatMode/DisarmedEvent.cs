@@ -18,8 +18,14 @@ namespace Content.Shared.CombatMode
         public float PushProbability { get; init; }
 
         /// <summary>
-        ///     Potential stamina damage if this disarm results in a shove.
+        ///     Prefix for the popup message that will be displayed on a successful push.
+        ///     Should be set before returning.
         /// </summary>
-        public float StaminaDamage { get; init; }
+        public string PopupPrefix { get; set; } = "";
+
+        /// <summary>
+        ///     Whether the entity was successfully stunned from a shove.
+        /// </summary>
+        public bool IsStunned { get; set; }
     }
 }

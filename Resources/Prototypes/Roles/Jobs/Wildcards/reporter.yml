@@ -3,26 +3,25 @@
   name: job-name-reporter
   description: job-description-reporter
   playTimeTracker: JobReporter
-  requirements:
-    - !type:CharacterOverallTimeRequirement
-      min: 7200 #DeltaV 2 hours
   startingGear: ReporterGear
   icon: "JobIconReporter"
   supervisors: job-supervisors-hop
   access:
   - Service
   - Maintenance
-  - Theatre # DeltaV - Add Theatre access
-  - Reporter # DeltaV - Add Reporter access
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Medical
+  wage: 50
+  #end-backmen: currency
 
 - type: startingGear
   id: ReporterGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitReporter
-    back: ClothingBackpackFilled
     shoes: ClothingShoesColorWhite
     id: ReporterPDA
     ears: ClothingHeadsetService
-  innerClothingSkirt: ClothingUniformJumpsuitJournalist
-  satchel: ClothingBackpackSatchelFilled
-  duffelbag: ClothingBackpackDuffelFilled
+  #storage:
+    #back:
+    #- Stuff

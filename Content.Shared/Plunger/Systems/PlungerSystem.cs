@@ -45,7 +45,7 @@ public sealed class PlungerSystem : EntitySystem
 
         _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, component.PlungeDuration, new PlungerDoAfterEvent(), uid, target, uid)
         {
-            BreakOnUserMove = true,
+            BreakOnMove = true,
             BreakOnDamage = true,
             MovementThreshold = 1.0f,
         });
@@ -76,3 +76,4 @@ public sealed class PlungerSystem : EntitySystem
         args.Handled = true;
     }
 }
+

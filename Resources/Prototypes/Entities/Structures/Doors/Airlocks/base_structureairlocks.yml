@@ -4,6 +4,7 @@
   name: airlock
   description: It opens, it closes, and maybe crushes you.
   components:
+  - type: StationAiWhitelist
   - type: MeleeSound
     soundGroups:
       Brute:
@@ -67,6 +68,7 @@
     fuel: 5
     time: 3
   - type: Airlock
+    openUnlitVisible: true # Corvax-Resprite-Airlocks
   - type: NavMapDoor
   - type: DoorBolt
   - type: Appearance
@@ -104,12 +106,14 @@
   - type: SpawnOnOverload
   - type: UserInterface
     interfaces:
+      enum.AiUi.Key:
+        type: StationAiBoundUserInterface
       enum.WiresUiKey.Key:
         type: WiresBoundUserInterface
   - type: Airtight
     noAirWhenFullyAirBlocked: false
   - type: RadiationBlocker
-    resistance: 5
+    resistance: 3
   - type: Occluder
   - type: Damageable
     damageContainer: StructuralInorganic
@@ -137,6 +141,9 @@
     - board
   - type: PlacementReplacement
     key: walls
+  - type: IconSmooth
+    key: walls
+    mode: NoSprite
   - type: PaintableAirlock
     group: Standard
     department: Civilian
@@ -150,9 +157,6 @@
       # This tag is used to nagivate the Airlock construction graph. It's needed because the construction graph is shared between Airlock, AirlockGlass, and HighSecDoor
   - type: PryUnpowered
   - type: BlockWeather
-  - type: InteractionVerbs
-    allowedVerbs:
-    - KnockOn
   placement:
     mode: SnapgridCenter
 
@@ -200,7 +204,7 @@
   - type: PaintableAirlock
     group: Glass
   - type: RadiationBlocker
-    resistance: 1
+    resistance: 2
   - type: Tag
     tags:
       - GlassAirlock

@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Content.Corvax.Interfaces.Shared;
 using Content.Server.Database;
 using Content.Shared.CCVar;
 using Content.Shared.Preferences;
@@ -11,14 +12,13 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 
-
 namespace Content.Server.Preferences.Managers
 {
     /// <summary>
     /// Sends <see cref="MsgPreferencesAndSettings"/> before the client joins the lobby.
     /// Receives <see cref="MsgSelectCharacter"/> and <see cref="MsgUpdateCharacter"/> at any time.
     /// </summary>
-    public sealed class ServerPreferencesManager : IServerPreferencesManager
+    public sealed class ServerPreferencesManager : IServerPreferencesManager, IPostInjectInit
     {
         [Dependency] private readonly IServerNetManager _netManager = default!;
         [Dependency] private readonly IConfigurationManager _cfg = default!;
@@ -26,6 +26,8 @@ namespace Content.Server.Preferences.Managers
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IDependencyCollection _dependencies = default!;
         [Dependency] private readonly ILogManager _log = default!;
+        [Dependency] private readonly UserDbDataManager _userDb = default!;
+        private ISharedSponsorsManager? _sponsors;
 
         // Cache player prefs on the server so we don't need as much async hell related to them.
         private readonly Dictionary<NetUserId, PlayerPrefData> _cachedPlayerPrefs =
@@ -33,10 +35,11 @@ namespace Content.Server.Preferences.Managers
 
         private ISawmill _sawmill = default!;
 
-        private int MaxCharacterSlots => _cfg.GetCVar(CCVars.GameMaxCharacterSlots);
+        // private int MaxCharacterSlots => _cfg.GetCVar(CCVars.GameMaxCharacterSlots); // Corvax-Sponsors
 
         public void Init()
         {
+            IoCManager.Instance!.TryResolveType(out _sponsors); // Corvax-Sponsors
             _netManager.RegisterNetMessage<MsgPreferencesAndSettings>();
             _netManager.RegisterNetMessage<MsgSelectCharacter>(HandleSelectCharacterMessage);
             _netManager.RegisterNetMessage<MsgUpdateCharacter>(HandleUpdateCharacterMessage);
@@ -55,7 +58,7 @@ namespace Content.Server.Preferences.Managers
                 return;
             }
 
-            if (index < 0 || index >= MaxCharacterSlots)
+            if (index < 0 || index >= GetMaxUserCharacterSlots(userId)) // Corvax-Sponsors
             {
                 return;
             }
@@ -95,13 +98,18 @@ namespace Content.Server.Preferences.Managers
                 return;
             }
 
-            if (slot < 0 || slot >= MaxCharacterSlots)
+            if (slot < 0 || slot >= GetMaxUserCharacterSlots(userId)) // Corvax-Sponsors
                 return;
 
             var curPrefs = prefsData.Prefs!;
             var session = _playerManager.GetSessionById(userId);
 
-            profile.EnsureValid(session, _dependencies);
+            // Corvax-Sponsors-Start
+            var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes)
+                ? prototypes.ToArray()
+                : [];
+            profile.EnsureValid(session, _dependencies, sponsorPrototypes);
+            // Corvax-Sponsors-End
 
             var profiles = new Dictionary<int, ICharacterProfile>(curPrefs.Characters)
             {
@@ -125,7 +133,7 @@ namespace Content.Server.Preferences.Managers
                 return;
             }
 
-            if (slot < 0 || slot >= MaxCharacterSlots)
+            if (slot < 0 || slot >= GetMaxUserCharacterSlots(userId)) // Corvax-Sponsors
             {
                 return;
             }
@@ -138,7 +146,7 @@ namespace Content.Server.Preferences.Managers
             if (curPrefs.SelectedCharacterIndex == slot)
             {
                 // That ! on the end is because Rider doesn't like .NET 5.
-                var (ns, profile) = curPrefs.Characters.FirstOrDefault(p => p.Key != message.Slot);
+                var (ns, profile) = curPrefs.Characters.FirstOrDefault(p => p.Key != message.Slot)!;
                 if (profile == null)
                 {
                     // Only slot left, can't delete.
@@ -153,24 +161,23 @@ namespace Content.Server.Preferences.Managers
 
             prefsData.Prefs = new PlayerPreferences(arr, nextSlot ?? curPrefs.SelectedCharacterIndex, curPrefs.AdminOOCColor);
 
-            if (!ShouldStorePrefs(message.MsgChannel.AuthType))
+            if (ShouldStorePrefs(message.MsgChannel.AuthType))
             {
-                return;
-            }
-
-            if (nextSlot != null)
-            {
-                await _db.DeleteSlotAndSetSelectedIndex(userId, slot, nextSlot.Value);
-            }
-            else
-            {
-                await _db.SaveCharacterSlotAsync(userId, null, slot);
+                if (nextSlot != null)
+                {
+                    await _db.DeleteSlotAndSetSelectedIndex(userId, slot, nextSlot.Value);
+                }
+                else
+                {
+                    await _db.SaveCharacterSlotAsync(userId, null, slot);
+                }
             }
         }
 
         // Should only be called via UserDbDataManager.
         public async Task LoadData(ICommonSession session, CancellationToken cancel)
         {
+            var collection = IoCManager.Instance!;
             if (!ShouldStorePrefs(session.Channel.AuthType))
             {
                 // Don't store data for guests.
@@ -195,6 +202,15 @@ namespace Content.Server.Preferences.Managers
                 async Task LoadPrefs()
                 {
                     var prefs = await GetOrCreatePreferencesAsync(session.UserId, cancel);
+                    // Corvax-Sponsors-Start: Remove sponsor markings from expired sponsors
+                    foreach (var (_, profile) in prefs.Characters)
+                    {
+                        var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes)
+                            ? prototypes.ToArray()
+                            : [];
+                        profile.EnsureValid(session, _dependencies, sponsorPrototypes);
+                    }
+                    // Corvax-Sponsors-End
                     prefsData.Prefs = prefs;
                 }
             }
@@ -215,7 +231,7 @@ namespace Content.Server.Preferences.Managers
             msg.Preferences = prefsData.Prefs;
             msg.Settings = new GameSettings
             {
-                MaxCharacterSlots = MaxCharacterSlots
+                MaxCharacterSlots = GetMaxUserCharacterSlots(session.UserId) // Corvax-Sponsors
             };
             _netManager.ServerSendMessage(msg, session.Channel);
         }
@@ -229,6 +245,15 @@ namespace Content.Server.Preferences.Managers
         {
             return _cachedPlayerPrefs.ContainsKey(session.UserId);
         }
+
+        // Corvax-Sponsors-Start: Calculate total available users slots with sponsors
+        private int GetMaxUserCharacterSlots(NetUserId userId)
+        {
+            var maxSlots = _cfg.GetCVar(CCVars.GameMaxCharacterSlots);
+            var extraSlots = _sponsors?.GetServerExtraCharSlots(userId) ?? 0;
+            return maxSlots + extraSlots;
+        }
+        // Corvax-Sponsors-End
 
         /// <summary>
         /// Tries to get the preferences from the cache
@@ -251,7 +276,6 @@ namespace Content.Server.Preferences.Managers
 
         /// <summary>
         /// Retrieves preferences for the given username from storage.
-        /// Creates and saves default preferences if they are not found, then returns them.
         /// </summary>
         public PlayerPreferences GetPreferences(NetUserId userId)
         {
@@ -266,7 +290,6 @@ namespace Content.Server.Preferences.Managers
 
         /// <summary>
         /// Retrieves preferences for the given username from storage or returns null.
-        /// Creates and saves default preferences if they are not found, then returns them.
         /// </summary>
         public PlayerPreferences? GetPreferencesOrNull(NetUserId? userId)
         {
@@ -289,13 +312,16 @@ namespace Content.Server.Preferences.Managers
             return prefs;
         }
 
-        private PlayerPreferences SanitizePreferences(ICommonSession session, PlayerPreferences prefs,
-            IDependencyCollection collection)
+        private PlayerPreferences SanitizePreferences(ICommonSession session, PlayerPreferences prefs, IDependencyCollection collection)
         {
             // Clean up preferences in case of changes to the game,
             // such as removed jobs still being selected.
-            return new PlayerPreferences(prefs.Characters.Select(p => new KeyValuePair<int, ICharacterProfile>(p.Key,
-                    p.Value.Validated(session, collection))), prefs.SelectedCharacterIndex, prefs.AdminOOCColor);
+
+            var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes) ? prototypes.ToArray() : []; // Corvax-Sponsors
+            return new PlayerPreferences(prefs.Characters.Select(p =>
+            {
+                return new KeyValuePair<int, ICharacterProfile>(p.Key, p.Value.Validated(session, collection, sponsorPrototypes));
+            }), prefs.SelectedCharacterIndex, prefs.AdminOOCColor);
         }
 
         public IEnumerable<KeyValuePair<NetUserId, ICharacterProfile>> GetSelectedProfilesForPlayers(
@@ -304,11 +330,7 @@ namespace Content.Server.Preferences.Managers
             return usernames
                 .Select(p => (_cachedPlayerPrefs[p].Prefs, p))
                 .Where(p => p.Prefs != null)
-                .Select(p =>
-                {
-                    var idx = p.Prefs!.SelectedCharacterIndex;
-                    return new KeyValuePair<NetUserId, ICharacterProfile>(p.p, p.Prefs!.GetProfile(idx));
-                });
+                .Select(p => new KeyValuePair<NetUserId, ICharacterProfile>(p.p, p.Prefs!.SelectedCharacter));
         }
 
         internal static bool ShouldStorePrefs(LoginType loginType)
@@ -320,6 +342,13 @@ namespace Content.Server.Preferences.Managers
         {
             public bool PrefsLoaded;
             public PlayerPreferences? Prefs;
+        }
+
+        void IPostInjectInit.PostInject()
+        {
+            _userDb.AddOnLoadPlayer(LoadData);
+            _userDb.AddOnFinishLoad(FinishLoad);
+            _userDb.AddOnPlayerDisconnect(OnClientDisconnected);
         }
     }
 }

@@ -27,7 +27,6 @@ public sealed class ToggleableClothingSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedStrippableSystem _strippable = default!;
-    [Dependency] private readonly ThievingSystem _thieving = default!;
 
     public override void Initialize()
     {
@@ -58,7 +57,7 @@ public sealed class ToggleableClothingSystem : EntitySystem
 
     private void OnGetVerbs(EntityUid uid, ToggleableClothingComponent component, GetVerbsEvent<EquipmentVerb> args)
     {
-        if (!args.CanAccess || !args.CanInteract || component.ClothingUid == null || component.Container == null)
+        if (!args.CanAccess || !args.CanInteract || args.Hands == null || component.ClothingUid == null || component.Container == null)
             return;
 
         var text = component.VerbText ?? (component.ActionEntity == null ? null : Name(component.ActionEntity.Value));
@@ -96,14 +95,12 @@ public sealed class ToggleableClothingSystem : EntitySystem
         if (component.StripDelay == null)
             return;
 
-        var (time, stealth) = _strippable.GetStripTimeModifiers(user, wearer, component.StripDelay.Value);
-
-        bool hidden = (stealth == ThievingStealth.Hidden);
+        var (time, stealth) = _strippable.GetStripTimeModifiers(user, wearer, item, component.StripDelay.Value);
 
         var args = new DoAfterArgs(EntityManager, user, time, new ToggleClothingDoAfterEvent(), item, wearer, item)
         {
             BreakOnDamage = true,
-            BreakOnTargetMove = true,
+            BreakOnMove = true,
             // This should just re-use the BUI range checks & cancel the do after if the BUI closes. But that is all
             // server-side at the moment.
             // TODO BUI REFACTOR.
@@ -113,8 +110,11 @@ public sealed class ToggleableClothingSystem : EntitySystem
         if (!_doAfter.TryStartDoAfter(args))
             return;
 
-        if (!hidden)
-            _strippable.StripPopup("strippable-component-alert-owner-interact", stealth, wearer, user: Identity.Entity(user, EntityManager), item: item);
+        if (!stealth)
+        {
+            var popup = Loc.GetString("strippable-component-alert-owner-interact", ("user", Identity.Entity(user, EntityManager)), ("item", item));
+            _popupSystem.PopupEntity(popup, wearer, wearer, PopupType.Large);
+        }
     }
 
     private void OnGetAttachedStripVerbsEvent(EntityUid uid, AttachedClothingComponent component, GetVerbsEvent<EquipmentVerb> args)

@@ -14,9 +14,6 @@
     blacklist:
       tags:
       - Catwalk
-    triggerGroups:
-      types:
-      - Chasm
   - type: Transform
     anchored: true
   - type: Clickable
@@ -48,6 +45,17 @@
   - type: Tag
     tags:
     - HideContextMenu
+  # backmen start
+  - type: Drain
+  - type: DumpableSolution
+    solution: drainBuffer
+  - type: SolutionContainerManager
+    solutions:
+      drainBuffer:
+        maxVol: 10000
+  - type: DrainableSolution
+    solution: drainBuffer
+  # backmen end
 
 - type: entity
   parent: FloorChasmEntity
@@ -58,7 +66,7 @@
     sprite: Tiles/Planet/Chasms/chromite_chasm.rsi
   - type: Icon
     sprite: Tiles/Planet/Chasms/chromite_chasm.rsi
-
+    
 - type: entity
   parent: FloorChasmEntity
   id: FloorDesertChasm
@@ -68,7 +76,7 @@
     sprite: Tiles/Planet/Chasms/desert_chasm.rsi
   - type: Icon
     sprite: Tiles/Planet/Chasms/desert_chasm.rsi
-
+    
 - type: entity
   parent: FloorChasmEntity
   id: FloorSnowChasm

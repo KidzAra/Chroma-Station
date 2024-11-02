@@ -6,6 +6,7 @@
   placement:
     mode: SnapgridCenter
   components:
+  - type: StationAiWhitelist
   - type: InteractionOutline
   - type: Sprite
     sprite: Structures/Doors/Airlocks/highsec/highsec.rsi
@@ -58,6 +59,7 @@
     fuel: 10
     time: 10
   - type: Airlock
+    openUnlitVisible: true # Corvax-Resprite-Airlocks
   - type: NavMapDoor
   - type: DoorBolt
   - type: AccessReader
@@ -79,9 +81,12 @@
     alwaysRandomize: true
   - type: UserInterface
     interfaces:
+      enum.AiUi.Key:
+        type: StationAiBoundUserInterface
       enum.WiresUiKey.Key:
         type: WiresBoundUserInterface
   - type: Airtight
+    fixVacuum: true
   - type: Occluder
   - type: Damageable
     damageContainer: StructuralInorganic

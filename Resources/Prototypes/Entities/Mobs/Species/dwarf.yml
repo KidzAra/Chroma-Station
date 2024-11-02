@@ -5,9 +5,17 @@
   id: BaseMobDwarf
   abstract: true
   components:
+  - type: LanguageSpeaker
+    currentLanguage: TauCetiBasic
+  - type: LanguageKnowledge #backmen: languages
+    speaks:
+    - TauCetiBasic
+    - Dwarven
+    understands:
+    - TauCetiBasic
+    - Dwarven
   - type: Hunger
   - type: Thirst
-  - type: Carriable # Carrying system from nyanotrasen.
   - type: Icon
     sprite: Mobs/Species/Slime/parts.rsi # It was like this beforehand, no idea why.
     state: full
@@ -21,6 +29,7 @@
   - type: Sprite
     noRot: true
     drawdepth: Mobs
+    scale: 1, 0.8
   - type: Body
     prototype: Dwarf
     requiredLegs: 2
@@ -56,17 +65,25 @@
     hideLayersOnEquip:
     - Hair
     - Snout
-  - type: LanguageKnowledge
-    speaks:
-    - TauCetiBasic
-    - SolCommon
-    understands:
-    - TauCetiBasic
-    - SolCommon
-  - type: LightweightDrunk
-    boozeStrengthMultiplier: 0.5
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: jumpsuit-female
 
 - type: entity
   parent: BaseSpeciesDummy
   id: MobDwarfDummy
-  noSpawn: true
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    scale: 1, 0.8
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: jumpsuit-female

@@ -39,6 +39,7 @@ public abstract class SharedMindSystem : EntitySystem
         SubscribeLocalEvent<VisitingMindComponent, EntityTerminatingEvent>(OnVisitingTerminating);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnReset);
         SubscribeLocalEvent<MindComponent, ComponentStartup>(OnMindStartup);
+        SubscribeLocalEvent<MindComponent, EntityRenamedEvent>(OnRenamed);
     }
 
     public override void Shutdown()
@@ -153,8 +154,11 @@ public abstract class SharedMindSystem : EntitySystem
             return;
 
         var dead = _mobState.IsDead(uid);
-        var hasUserId = CompOrNull<MindComponent>(mindContainer.Mind)?.UserId;
-        var hasSession = CompOrNull<MindComponent>(mindContainer.Mind)?.Session;
+
+        var mind = CompOrNull<MindComponent>(mindContainer.Mind);
+
+        var hasUserId = mind?.UserId;
+        var hasSession = mind?.Session;
 
         if (dead && hasUserId == null)
             args.PushMarkup($"[color=mediumpurple]{Loc.GetString("comp-mind-examined-dead-and-irrecoverable", ("ent", uid))}[/color]");
@@ -168,15 +172,23 @@ public abstract class SharedMindSystem : EntitySystem
             args.PushMarkup($"[color=yellow]{Loc.GetString("comp-mind-examined-ssd", ("ent", uid))}[/color]");
     }
 
+    /// <summary>
+    /// Checks to see if the user's mind prevents them from suicide
+    /// Handles the suicide event without killing the user if true
+    /// </summary>
     private void OnSuicide(EntityUid uid, MindContainerComponent component, SuicideEvent args)
     {
         if (args.Handled)
             return;
 
         if (TryComp(component.Mind, out MindComponent? mind) && mind.PreventSuicide)
-        {
-            args.BlockSuicideAttempt(true);
-        }
+            args.Handled = true;
+    }
+
+    private void OnRenamed(Entity<MindComponent> ent, ref EntityRenamedEvent args)
+    {
+        ent.Comp.CharacterName = args.NewName;
+        Dirty(ent);
     }
 
     public EntityUid? GetMind(EntityUid uid, MindContainerComponent? mind = null)
@@ -313,6 +325,10 @@ public abstract class SharedMindSystem : EntitySystem
     {
     }
 
+    public virtual void ControlMob(EntityUid user, EntityUid target) {}
+
+    public virtual void ControlMob(NetUserId user, EntityUid target) {}
+
     /// <summary>
     /// Tries to create and add an objective from its prototype id.
     /// </summary>
@@ -370,7 +386,7 @@ public abstract class SharedMindSystem : EntitySystem
         if (Resolve(mindId, ref mind))
         {
             var query = GetEntityQuery<T>();
-            foreach (var uid in mind.AllObjectives)
+            foreach (var uid in mind.Objectives)
             {
                 if (query.TryGetComponent(uid, out objective))
                 {
@@ -468,19 +484,6 @@ public abstract class SharedMindSystem : EntitySystem
 
         mindId = default;
         return false;
-    }
-
-    /// <summary>
-    /// Gets a role component from a player's mind.
-    /// </summary>
-    /// <returns>Whether a role was found</returns>
-    public bool TryGetRole<T>(EntityUid user, [NotNullWhen(true)] out T? role) where T : IComponent
-    {
-        role = default;
-        if (!TryComp<MindContainerComponent>(user, out var mindContainer) || mindContainer.Mind == null)
-            return false;
-
-        return TryComp(mindContainer.Mind, out role);
     }
 
     /// <summary>

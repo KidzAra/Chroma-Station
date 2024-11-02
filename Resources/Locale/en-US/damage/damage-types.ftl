@@ -11,4 +11,6 @@ damage-type-radiation = Radiation
 damage-type-shock = Shock
 damage-type-slash = Slash
 damage-type-structural = Structural
-damage-type-holy = Holy
+
+#backmen
+damage-type-stun = Stun

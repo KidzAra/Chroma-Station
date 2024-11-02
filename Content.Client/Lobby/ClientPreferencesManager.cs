@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using Content.Corvax.Interfaces.Shared;
 using Content.Shared.Preferences;
 using Robust.Client;
 using Robust.Client.Player;
-using Robust.Shared.Configuration;
-using Robust.Shared.IoC;
 using Robust.Shared.Network;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Client.Lobby
@@ -17,13 +13,12 @@ namespace Content.Client.Lobby
     ///     connection.
     ///     Stores preferences on the server through <see cref="SelectCharacter" /> and <see cref="UpdateCharacter" />.
     /// </summary>
-    public sealed class ClientPreferencesManager : IClientPreferencesManager
+    public partial class ClientPreferencesManager : IClientPreferencesManager
     {
         [Dependency] private readonly IClientNetManager _netManager = default!;
         [Dependency] private readonly IBaseClient _baseClient = default!;
-        [Dependency] private readonly IConfigurationManager _cfg = default!;
-        [Dependency] private readonly IPrototypeManager _prototypes = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;
+        private ISharedSponsorsManager? _sponsorsManager; // Corvax-Sponsors
 
         public event Action? OnServerDataLoaded;
 
@@ -32,6 +27,7 @@ namespace Content.Client.Lobby
 
         public void Initialize()
         {
+            IoCManager.Instance!.TryResolveType(out _sponsorsManager); // Corvax-Sponsors
             _netManager.RegisterNetMessage<MsgPreferencesAndSettings>(HandlePreferencesAndSettings);
             _netManager.RegisterNetMessage<MsgUpdateCharacter>();
             _netManager.RegisterNetMessage<MsgSelectCharacter>();
@@ -67,7 +63,10 @@ namespace Content.Client.Lobby
         public void UpdateCharacter(ICharacterProfile profile, int slot)
         {
             var collection = IoCManager.Instance!;
-            profile.EnsureValid(_playerManager.LocalSession!, collection);
+            // Corvax-Sponsors-Start
+            var sponsorPrototypes = _sponsorsManager?.GetClientPrototypes().ToArray() ?? [];
+            profile.EnsureValid(_playerManager.LocalSession!, collection, sponsorPrototypes);
+            // Corvax-Sponsors-End
             var characters = new Dictionary<int, ICharacterProfile>(Preferences.Characters) {[slot] = profile};
             Preferences = new PlayerPreferences(characters, Preferences.SelectedCharacterIndex, Preferences.AdminOOCColor);
             var msg = new MsgUpdateCharacter

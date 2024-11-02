@@ -8,7 +8,6 @@ using Content.Shared.Database;
 using Content.Shared.FixedPoint;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
-using Content.Shared.Mood;
 using Robust.Shared.Containers;
 
 namespace Content.Server.Atmos.EntitySystems
@@ -154,6 +153,9 @@ namespace Content.Server.Atmos.EntitySystems
             return Math.Min(modified, Atmospherics.OneAtmosphere);
         }
 
+        /// <summary>
+        /// Returns adjusted pressure after having applied resistances from equipment and innate (if any), to check against a high pressure hazard threshold
+        /// </summary>
         public float GetFeltHighPressure(EntityUid uid, BarotraumaComponent barotrauma, float environmentPressure)
         {
             if (barotrauma.HasImmunity)
@@ -231,31 +233,33 @@ namespace Content.Server.Atmos.EntitySystems
                     >= Atmospherics.WarningHighPressure => GetFeltHighPressure(uid, barotrauma, pressure),
                     _ => pressure
                 };
+
                 if (pressure <= Atmospherics.HazardLowPressure)
                 {
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * Atmospherics.LowPressureDamage, true, false);
+                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * Atmospherics.LowPressureDamage, true, false, canSever: false); // backmen
                     if (!barotrauma.TakingDamage)
                     {
                         barotrauma.TakingDamage = true;
                         _adminLogger.Add(LogType.Barotrauma, $"{ToPrettyString(uid):entity} started taking low pressure damage");
                     }
-                    RaiseLocalEvent(uid, new MoodEffectEvent("MobLowPressure"));
-                    _alertsSystem.ShowAlert(uid, AlertType.LowPressure, 2);
+
+                    _alertsSystem.ShowAlert(uid, barotrauma.LowPressureAlert, 2);
                 }
                 else if (pressure >= Atmospherics.HazardHighPressure)
                 {
                     var damageScale = MathF.Min(((pressure / Atmospherics.HazardHighPressure) - 1) * Atmospherics.PressureDamageCoefficient, Atmospherics.MaxHighPressureDamage);
 
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * damageScale, true, false);
-                    RaiseLocalEvent(uid, new MoodEffectEvent("MobHighPressure"));
+                    // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
+                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * damageScale, true, false, canSever: false); // backmen
 
                     if (!barotrauma.TakingDamage)
                     {
                         barotrauma.TakingDamage = true;
                         _adminLogger.Add(LogType.Barotrauma, $"{ToPrettyString(uid):entity} started taking high pressure damage");
                     }
-                    _alertsSystem.ShowAlert(uid, AlertType.HighPressure, 2);
+
+                    _alertsSystem.ShowAlert(uid, barotrauma.HighPressureAlert, 2);
                 }
                 else
                 {
@@ -265,17 +269,18 @@ namespace Content.Server.Atmos.EntitySystems
                         barotrauma.TakingDamage = false;
                         _adminLogger.Add(LogType.Barotrauma, $"{ToPrettyString(uid):entity} stopped taking pressure damage");
                     }
+
                     // Set correct alert.
                     switch (pressure)
                     {
                         case <= Atmospherics.WarningLowPressure:
-                            _alertsSystem.ShowAlert(uid, AlertType.LowPressure, 1);
+                            _alertsSystem.ShowAlert(uid, barotrauma.LowPressureAlert, 1);
                             break;
                         case >= Atmospherics.WarningHighPressure:
-                            _alertsSystem.ShowAlert(uid, AlertType.HighPressure, 1);
+                            _alertsSystem.ShowAlert(uid, barotrauma.HighPressureAlert, 1);
                             break;
                         default:
-                            _alertsSystem.ClearAlertCategory(uid, AlertCategory.Pressure);
+                            _alertsSystem.ClearAlertCategory(uid, barotrauma.PressureAlertCategory);
                             break;
                     }
                 }

@@ -24,14 +24,16 @@ public abstract partial class SharedToolSystem : EntitySystem
     [Dependency] private   readonly SharedAudioSystem _audioSystem = default!;
     [Dependency] private   readonly SharedDoAfterSystem _doAfterSystem = default!;
     [Dependency] protected readonly SharedInteractionSystem InteractionSystem = default!;
-    [Dependency] protected readonly SharedItemToggleSystem ItemToggle = default!;
+    [Dependency] protected readonly ItemToggleSystem ItemToggle = default!;
     [Dependency] private   readonly SharedMapSystem _maps = default!;
     [Dependency] private   readonly SharedPopupSystem _popup = default!;
     [Dependency] protected readonly SharedSolutionContainerSystem SolutionContainerSystem = default!;
     [Dependency] private   readonly SharedTransformSystem _transformSystem = default!;
     [Dependency] private   readonly TileSystem _tiles = default!;
     [Dependency] private   readonly TurfSystem _turfs = default!;
-    [Dependency] protected readonly SharedSolutionContainerSystem SolutionContainer = default!;
+
+    public const string CutQuality = "Cutting";
+    public const string PulseQuality = "Pulsing";
 
     public override void Initialize()
     {
@@ -138,8 +140,8 @@ public abstract partial class SharedToolSystem : EntitySystem
         var doAfterArgs = new DoAfterArgs(EntityManager, user, delay / toolComponent.SpeedModifier, toolEvent, tool, target: target, used: tool)
         {
             BreakOnDamage = true,
-            BreakOnTargetMove = true,
-            BreakOnUserMove = true,
+            BreakOnMove = true,
+            BreakOnWeightlessMove = false,
             NeedHand = tool != user,
             AttemptFrequency = fuel > 0 ? AttemptFrequency.EveryTick : AttemptFrequency.Never
         };
@@ -212,12 +214,12 @@ public abstract partial class SharedToolSystem : EntitySystem
 
         // check if the user allows using the tool
         var ev = new ToolUserAttemptUseEvent(target);
-        RaiseLocalEvent(user, ref ev);
+        RaiseLocalEvent(user, ref ev, true); // backmen: protect system
         if (ev.Cancelled)
             return false;
 
         // check if the tool allows being used
-        var beforeAttempt = new ToolUseAttemptEvent(user);
+        var beforeAttempt = new ToolUseAttemptEvent(user, fuel);
         RaiseLocalEvent(tool, beforeAttempt);
         if (beforeAttempt.Cancelled)
             return false;
@@ -271,6 +273,11 @@ public abstract partial class SharedToolSystem : EntitySystem
 
             return new ToolDoAfterEvent(Fuel, evClone, OriginalTarget);
         }
+
+        public override bool IsDuplicate(DoAfterEvent other)
+        {
+            return other is ToolDoAfterEvent toolDoAfter && WrappedEvent.IsDuplicate(toolDoAfter.WrappedEvent);
+        }
     }
 
     [Serializable, NetSerializable]
@@ -296,4 +303,3 @@ public abstract partial class SharedToolSystem : EntitySystem
 public sealed partial class CableCuttingFinishedEvent : SimpleDoAfterEvent;
 
 #endregion
-

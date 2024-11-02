@@ -52,13 +52,3 @@
   id: ShadowHaze
   supportedTypes:
     - Heat
-
-- type: damageContainer
-  id: HalfSpirit
-  supportedGroups:
-    - Burn
-    - Brute
-    - Airloss
-    - Immaterial
-  supportedTypes:
-    - Poison

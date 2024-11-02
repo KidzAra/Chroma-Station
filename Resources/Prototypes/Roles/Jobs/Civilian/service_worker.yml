@@ -3,30 +3,30 @@
   name: job-name-serviceworker
   description: job-description-serviceworker
   playTimeTracker: JobServiceWorker
-  requirements:
-    - !type:CharacterOverallTimeRequirement
-      min: 7200 # DeltaV - 2 hours
   startingGear: ServiceWorkerGear
   icon: "JobIconServiceWorker"
   supervisors: job-supervisors-service
-  canBeAntag: true # DeltaV - Can be antagonist
-  antagAdvantage: 1 # DeltaV - Reduced TC: Accesses
+  canBeAntag: true # Corvax-MRP: Available not only for newbies
   access:
   - Service
   - Maintenance
+  - Bar
+  - Kitchen
   extendedAccess:
   - Hydroponics
-  - Bar # DeltaV - moved to extended access
-  - Kitchen # DeltaV - moved to extended access
+  #start-backmen: currency
+  minBankBalance: 150
+  maxBankBalance: 250
+  wageDepartment: Civilian
+  wage: 50
+  #end-backmen: currency
 
 - type: startingGear
   id: ServiceWorkerGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitColorDarkGreen # DeltaV
-    back: ClothingBackpackFilled
     shoes: ClothingShoesColorBlack
     id: ServiceWorkerPDA
     ears: ClothingHeadsetService
-  innerClothingSkirt: ClothingUniformJumpskirtColorDarkGreen # DeltaV
-  satchel: ClothingBackpackSatchelFilled
-  duffelbag: ClothingBackpackDuffelFilled
+  #storage:
+    #back:
+    #- Stuff

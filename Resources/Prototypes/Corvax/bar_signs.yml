@@ -1,0 +1,15 @@
+- type: barSign
+  id: AlcoholicSign
+  name: barsign-prototype-name-alcoholic
+  icon:
+    sprite: Structures/Wallmounts/barsign.rsi
+    state: corvax_alcoholic
+  description: barsign-prototype-description-alcoholic
+
+- type: barSign
+  id: PivnayaBomba
+  name: Пивная бомба
+  icon:
+    sprite: Structures/Wallmounts/barsign.rsi
+    state: pivnaya
+  description: Ну да, это пивная бомба, вопросы?

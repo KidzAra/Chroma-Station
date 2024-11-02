@@ -10,8 +10,9 @@
     - Moth
     - Reptilian
     - SlimePerson
-    - IPCs
-    - Harpy
+    - NyanoSpecies # backmen
+    - Vulpkanin # Corvax
+    - Vox
 
 - type: guideEntry
   id: Arachnid
@@ -49,11 +50,6 @@
   text: "/ServerInfo/Guidebook/Mobs/SlimePerson.xml"
 
 - type: guideEntry
-  id: IPCs
-  name: species-name-ipc
-  text: "/ServerInfo/Guidebook/Mobs/IPCs.xml"
-
-- type: guideEntry
-  id: Harpy
-  name: species-name-harpy
-  text: "/ServerInfo/Guidebook/Mobs/Harpy.xml"
+  id: Vox
+  name: species-name-vox
+  text: "/ServerInfo/Guidebook/Mobs/Vox.xml"

@@ -1,12 +1,10 @@
 ﻿using Content.Server.Anomaly.Components;
-using Content.Server.Construction;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Anomaly;
 using Content.Shared.Anomaly.Components;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Research.Components;
-using Content.Server.Psionics.Glimmer;
 
 namespace Content.Server.Anomaly;
 
@@ -21,7 +19,6 @@ public sealed partial class AnomalySystem
     {
         SubscribeLocalEvent<AnomalyVesselComponent, ComponentShutdown>(OnVesselShutdown);
         SubscribeLocalEvent<AnomalyVesselComponent, MapInitEvent>(OnVesselMapInit);
-        SubscribeLocalEvent<AnomalyVesselComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         SubscribeLocalEvent<AnomalyVesselComponent, InteractUsingEvent>(OnVesselInteractUsing);
         SubscribeLocalEvent<AnomalyVesselComponent, ExaminedEvent>(OnExamined);
         SubscribeLocalEvent<AnomalyVesselComponent, ResearchServerGetPointsPerSecondEvent>(OnVesselGetPointsPerSecond);
@@ -67,11 +64,6 @@ public sealed partial class AnomalySystem
         UpdateVesselAppearance(uid,  component);
     }
 
-    private void OnUpgradeExamine(EntityUid uid, AnomalyVesselComponent component, UpgradeExamineEvent args)
-    {
-        args.AddPercentageUpgrade("anomaly-vessel-component-upgrade-output", component.PointMultiplier);
-    }
-
     private void OnVesselInteractUsing(EntityUid uid, AnomalyVesselComponent component, InteractUsingEvent args)
     {
         if (component.Anomaly != null ||
@@ -83,14 +75,6 @@ public sealed partial class AnomalySystem
 
         if (!TryComp<AnomalyComponent>(anomaly, out var anomalyComponent) || anomalyComponent.ConnectedVessel != null)
             return;
-
-        // Nyano - Summary - Begin modified code block: tie anomaly harvesting to glimmer rate.
-        if (this.IsPowered(uid, EntityManager) &&
-            TryComp<GlimmerSourceComponent>(anomaly, out var glimmerSource))
-        {
-            glimmerSource.Active = true;
-        }
-        // Nyano - End modified code block.
 
         component.Anomaly = scanner.ScannedAnomaly;
         anomalyComponent.ConnectedVessel = uid;

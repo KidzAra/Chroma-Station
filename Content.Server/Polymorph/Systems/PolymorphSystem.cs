@@ -121,9 +121,7 @@ public sealed partial class PolymorphSystem : EntitySystem
         if (!_proto.TryIndex(args.ProtoId, out var prototype) || args.Handled)
             return;
 
-        PolymorphEntity(ent, prototype.Configuration);
-
-        args.Handled = true;
+        args.Handled = PolymorphEntity(ent, prototype.Configuration) != null;
     }
 
     private void OnRevertPolymorphActionEvent(Entity<PolymorphedEntityComponent> ent,
@@ -211,7 +209,7 @@ public sealed partial class PolymorphSystem : EntitySystem
         var childXform = Transform(child);
         _transform.SetLocalRotation(child, targetTransformComp.LocalRotation, childXform);
 
-        if (_container.TryGetContainingContainer(uid, out var cont))
+        if (_container.TryGetContainingContainer((uid, targetTransformComp, null), out var cont))
             _container.Insert(child, cont);
 
         //Transfers all damage from the original to the new one
@@ -248,7 +246,7 @@ public sealed partial class PolymorphSystem : EntitySystem
             }
         }
 
-        if (configuration.TransferName && TryComp<MetaDataComponent>(uid, out var targetMeta))
+        if (configuration.TransferName && TryComp(uid, out MetaDataComponent? targetMeta))
             _metaData.SetEntityName(child, targetMeta.EntityName);
 
         if (configuration.TransferHumanoidAppearance)
@@ -361,6 +359,17 @@ public sealed partial class PolymorphSystem : EntitySystem
         EntityUid? actionId = default!;
         if (!_actions.AddAction(target, ref actionId, RevertPolymorphId, target))
             return;
+
+        // start-backmen: action fix
+        if (_actions.TryGetActionData(actionId, out var actionComponent))
+        {
+            if (polyProto.Configuration.Cooldown != TimeSpan.Zero)
+            {
+                actionComponent.UseDelay = polyProto.Configuration.Cooldown;
+                _actions.SetCooldown(actionId, polyProto.Configuration.Cooldown);
+            }
+        }
+        // end-backmen: action fix
 
         target.Comp.PolymorphActions.Add(id, actionId.Value);
 

@@ -41,11 +41,10 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
         targetHumanoid.SkinColor = sourceHumanoid.SkinColor;
         targetHumanoid.EyeColor = sourceHumanoid.EyeColor;
         targetHumanoid.Age = sourceHumanoid.Age;
-        targetHumanoid.Height = sourceHumanoid.Height;
-        targetHumanoid.Width = sourceHumanoid.Width;
         SetSex(target, sourceHumanoid.Sex, false, targetHumanoid);
         targetHumanoid.CustomBaseLayers = new(sourceHumanoid.CustomBaseLayers);
         targetHumanoid.MarkingSet = new(sourceHumanoid.MarkingSet);
+        SetTTSVoice(target, sourceHumanoid.Voice, targetHumanoid); // Corvax-TTS
 
         targetHumanoid.Gender = sourceHumanoid.Gender;
         if (TryComp<GrammarComponent>(target, out var grammar))
@@ -53,9 +52,7 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
             grammar.Gender = sourceHumanoid.Gender;
         }
 
-        targetHumanoid.LastProfileLoaded = sourceHumanoid.LastProfileLoaded; // DeltaV - let paradox anomaly be cloned
-
-        Dirty(targetHumanoid);
+        Dirty(target, targetHumanoid);
     }
 
     /// <summary>
@@ -76,7 +73,7 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
         humanoid.MarkingSet.Remove(prototype.MarkingCategory, marking);
 
         if (sync)
-            Dirty(humanoid);
+            Dirty(uid, humanoid);
     }
 
     /// <summary>
@@ -97,7 +94,7 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
         }
 
         humanoid.MarkingSet.Remove(category, index);
-        Dirty(humanoid);
+        Dirty(uid, humanoid);
     }
 
     /// <summary>
@@ -126,7 +123,7 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
         }
 
         humanoid.MarkingSet.Replace(category, index, marking);
-        Dirty(humanoid);
+        Dirty(uid, humanoid);
     }
 
     /// <summary>
@@ -153,6 +150,6 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
             markings[index].SetColor(i, colors[i]);
         }
 
-        Dirty(humanoid);
+        Dirty(uid, humanoid);
     }
 }

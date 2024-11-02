@@ -1,69 +1,74 @@
-# Einstein Engines
-
-<p align="center"><img src="https://raw.githubusercontent.com/Simple-Station/Einstein-Engines/master/Resources/Textures/Logo/splashlogo.png" width="512px" /></p>
+[<img src="https://imagizer.imageshack.com/img923/7392/pIWR7b.png" alt="ASF" width="989" align="center">](https://github.com/Rxup/space-station-14)
 
 ---
 
-Einstein Engines is a hard fork of [Space Station 14](https://github.com/space-wizards/space-station-14) built around the ideals and design inspirations of the Baystation family of servers from Space Station 13 with a focus on having modular code that anyone can use to make the RP server of their dreams.
-Our founding organization is based on a democratic system whereby our mutual contributors and downstreams have a say in what code goes into their own upstream.
-If you are a representative of a former downstream of Delta-V, we would like to invite you to contact us for an opportunity to represent your fork in this new upstream.
+Backmen&Ataraxia - это форк [Space Wizards](https://github.com/space-wizards/space-station-14), ориентирующийся на идеи [СтароTG](https://github.com/tgstation/tgstation) и [Shiptest](https://github.com/shiptest-ss13/Shiptest) из Space Station 13, включая в это свои собственные идеи.
 
-Space Station 14 is inspired heavily by Space Station 13 and runs on [Robust Toolbox](https://github.com/space-wizards/RobustToolbox), a homegrown engine written in C#.
+Space Station 14 - это ремейк SS13, который работает на собственном движке [Robust Toolbox](https://github.com/space-wizards/Robust-Toolbox), написанном на C#.
 
-As a hard fork, any code sourced from a different upstream cannot ever be merged directly here, and must instead be ported.
-All code present in this repository is subject to change as desired by the council of maintainers.
+## Ссылки
 
-## Official Server Policy
+[<img src="https://i.imgur.com/XiS9QP5.png" alt="ASF" width="150" align="left">](https://github.com/AtaraxiaSpaceFoundation)
+**Ataraxia Space Foundation**<br>Специализируемся на разработке этого билда.
 
-**No official servers will ever be made for Einstein-Engines**.
+[<img src="https://i.imgur.com/xMzKtYK.png" alt="Discord" width="150" align="left">](https://discord.gg/ss-14-backmen-ru-1053200453829132298)
+**Discord Server**<br>В космосе вас никто не услышит.
 
-In order to prevent a potential conflict of interest, we will never open any server directly using the Einstein Engines codebase itself.
-Any server claiming to be an official representation of this fork is not endorsed in any way by this organization.
-We however would like to invite anyone wishing to create a server to make a fork of Einstein Engines.
+[<img src="https://imagizer.imageshack.com/img922/4959/8KTh9r.png" alt="Wiki" width="150" align="left">](https://wiki.backmen.ru)
+**Wiki**<br>Что за блобы и с чем их едят?
 
-## Links
+## Сборка
 
-[Website](https://simplestation.org) | [Discord](https://discord.gg/X4QEXxUrsJ) | [Steam(SSMV Launcher)](https://store.steampowered.com/app/2585480/Space_Station_Multiverse/) | [Steam(WizDen Launcher)](https://store.steampowered.com/app/1255460/Space_Station_14/) | [Standalone](https://spacestationmultiverse.com/downloads/)
-
-## Contributing
-
-We are happy to accept contributions from anybody, come join our Discord if you want to help.
-We've got a [list of issues](https://github.com/Simple-Station/Einstein-Engines/issues) that need to be done and anybody can pick them up. Don't be afraid to ask for help in Discord either!
-
-We are currently accepting translations of the game on our main repository.
-If you would like to translate the game into another language check the #contributor-general channel in our Discord.
-
-## Building
-
-Refer to [the Space Wizards' guide](https://docs.spacestation14.com/en/general-development/setup/setting-up-a-development-environment.html) on setting up a development environment for general information, but keep in mind that Einstein Engines is not the same and many things may not apply.
-We provide some scripts shown below to make the job easier.
-
-### Build dependencies
-
-> - Git
-> - .NET SDK 8.0.100
-
+Следуйте гайду от [Space Wizards](https://docs.spacestation14.com/en/general-development/setup/setting-up-a-development-environment.html) по настройке рабочей среды, но учитывайте, что репозитории отличаются друг от друга и некоторые вещи могут отличаться.
+Ниже перечислены скрипты и методы облегчающие работу с билдом.
 
 ### Windows
 
-> 1. Clone this repository
-> 2. Run `git submodule update --init --recursive` in a terminal to download the engine
-> 3. Run `Scripts/bat/buildAllDebug.bat` after making any changes to the source
-> 4. Run `Scripts/bat/runQuickAll.bat` to launch the client and the server
-> 5. Connect to localhost in the client and play
+> 1. Склонируйте данный репозиторий.
+> 2. Запустите `git submodule update --init --recursive` в командной строке, чтобы скачать движок игры.
+> 3. Запускайте `Scripts/bat/buildAllDebug.bat` после любых изменений в коде проекта.
+> 4. Запустите `Scripts/bat/runQuickAll.bat`, чтобы запустить клиент и сервер.
+> 5. Подключитесь к локальному серверу и играйте.
 
 ### Linux
 
-> 1. Clone this repository
-> 2. Run `git submodule update --init --recursive` in a terminal to download the engine
-> 3. Run `Scripts/sh/buildAllDebug.sh` after making any changes to the source
-> 4. Run `Scripts/sh/runQuickAll.sh` to launch the client and the server
-> 5. Connect to localhost in the client and play
+> 1. Склонируйте данный репозиторий.
+> 2. Запустите `git submodule update --init --recursive` в командной строке, чтобы скачать движок игры.
+> 3. Запускайте `Scripts/sh/buildAllDebug.sh` после любых изменений в коде проекта.
+> 4. Запустите `Scripts/sh/runQuickAll.sh`, чтобы запустить клиент и сервер.
+> 5. Подключитесь к локальному серверу и играйте.
 
 ### MacOS
 
-> I don't know anybody using MacOS to test this, but it's probably roughly the same steps as Linux
+> Предположительно, также, как и на Линуксе, сами разберётесь.
 
-## License
+---
 
-Please read the [LEGAL.md](./LEGAL.md) file for information on the licenses of the code and assets in this repository.
+## GptChat
+
+```toml
+[gpt]
+enabled = true
+api = "https://gigachat.devices.sberbank.ru/api/v1/"
+model = "GigaChat"
+token = ""
+giga_token = "ВСТАВИТЬ СЮДА СЕКРЕТНЫЙ КЛЮЧ"
+```
+
+[Токен](https://developers.sber.ru/portal/products/gigachat-api)
+ запрашивается автоматически по секретному ключу и автоматически обновляется.
+
+---
+
+## Лицензия
+
+Содержимое, добавленное в этот репозиторий после коммита 254687f3d1d1a02aa9dba61d7c114c73dc8e4754 (`17 June 2024 12:00:00 UTC`), распространяется по лицензии GNU Affero General Public License версии 3.0, если не указано иное.
+См. [LICENSE-AGPLv3](./LICENSE-AGPLv3.txt).
+
+Содержимое, добавленное в этот репозиторий до коммита 254687f3d1d1a02aa9dba61d7c114c73dc8e4754 (`17 June 2024 12:00:00 UTC`) распространяется по лицензии MIT, если не указано иное.
+См. [LICENSE-MIT](./LICENSE-MIT.TXT).
+
+Большинство ресурсов лицензировано под [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), если не указано иное. Лицензия и авторские права на ресурсах указаны в файле метаданных.
+[Example](./Resources/Textures/Objects/Tools/crowbar.rsi/meta.json).
+
+Обратите внимание, что некоторые активы лицензированы под некоммерческой [CC-BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) или аналогичной некоммерческой лицензией и должны быть удалены, если вы хотите использовать этот проект в коммерческих целях.

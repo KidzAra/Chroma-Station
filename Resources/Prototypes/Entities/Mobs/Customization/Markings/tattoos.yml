@@ -2,7 +2,18 @@
   id: TattooHiveChest
   bodyPart: Chest
   markingCategory: Chest
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -16,7 +27,18 @@
   id: TattooNightlingChest
   bodyPart: Chest
   markingCategory: Chest
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -29,8 +51,19 @@
 - type: marking
   id: TattooSilverburghLeftLeg
   bodyPart: LLeg
-  markingCategory: LeftLeg
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  markingCategory: Legs
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -43,8 +76,19 @@
 - type: marking
   id: TattooSilverburghRightLeg
   bodyPart: RLeg
-  markingCategory: RightLeg
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  markingCategory: Legs
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -57,8 +101,19 @@
 - type: marking
   id: TattooCampbellLeftArm
   bodyPart: LArm
-  markingCategory: LeftArm
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  markingCategory: Arms
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -71,8 +126,19 @@
 - type: marking
   id: TattooCampbellRightArm
   bodyPart: RArm
-  markingCategory: RightArm
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  markingCategory: Arms
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -85,8 +151,19 @@
 - type: marking
   id: TattooCampbellLeftLeg
   bodyPart: LLeg
-  markingCategory: LeftLeg
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  markingCategory: Legs
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -99,8 +176,19 @@
 - type: marking
   id: TattooCampbellRightLeg
   bodyPart: RLeg
-  markingCategory: RightLeg
-  speciesRestriction: [Human, Dwarf, Felinid, Oni] # Delta V - Felinid, Oni
+  markingCategory: Legs
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -114,7 +202,18 @@
   id: TattooEyeRight
   bodyPart: Eyes
   markingCategory: Head
-  speciesRestriction: [Human, SlimePerson, Reptilian, Dwarf, Felinid, Oni, Harpy] # Delta V - Felinid, Oni, Harpy
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:
@@ -128,7 +227,18 @@
   id: TattooEyeLeft
   bodyPart: Eyes
   markingCategory: Head
-  speciesRestriction: [Human, SlimePerson, Reptilian, Dwarf, Felinid, Oni, Harpy] # Delta V - Felinid, Oni, Harpy
+  speciesRestriction:
+    [
+      Human,
+      Felinid,
+      Reptilian,
+      SlimePerson,
+      Oni,
+      Arachne,
+      Moth,
+      Shadowkin,
+      Dwarf
+    ]
   coloring:
     default:
       type:

@@ -12,7 +12,7 @@
       rarePrototypes:
         - FoamBlade
         - PlushieGhost
-        - PlushieAbductorAgent
+        - PlushieAbductorAgent # EE
       rareChance: 0.03
       prototypes:
         - PlushieBee
@@ -34,10 +34,9 @@
         - ToyAmongPequeno
         - ToyMouse
         - PlushieDiona
-        - PlushieMoth
-        - PlushieMothRandom # Nyanotrasen Random Moth Plushies
+        - RubberPig
         - PlushieArachind
-        - PlushieArachne
+        - PlushieArachne # EE toys START
         - PlushieAbductor
         - PlushieGnome
         - PlushieLoveable
@@ -68,7 +67,7 @@
         - PlushieNar
         - PlushieTrystan
         - PlushieSlips
-        - PlushieJester
+        - PlushieJester # EE toys END
       chance: 0.5
       offset: 0.2
 
@@ -104,9 +103,6 @@
         - ToyDurand
         - ToySkeleton
         - MysteryFigureBox
-        - ToyZero # DeltaV Toy, see Resources/Prototypes/DeltaV/Entities/Objects/Fun/toys.yml
-        - ToyRenault # DeltaV Toy, see Resources/Prototypes/DeltaV/Entities/Objects/Fun/toys.yml
-        - ToySiobhan # DeltaV Toy, see Resources/Prototypes/DeltaV/Entities/Objects/Fun/toys.yml
       chance: 0.5
       offset: 0.2
 

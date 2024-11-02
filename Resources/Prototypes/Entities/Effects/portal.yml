@@ -24,6 +24,7 @@
         - WallLayer
         hard: false
   - type: Portal
+  - type: Dispellable
 
 - type: entity
   id: PortalRed
@@ -65,7 +66,7 @@
     energy: 1
     netsync: false
   - type: TimedDespawn
-    lifetime: 120
+    lifetime: 1
   - type: Portal
     canTeleportToOtherMaps: true
 

@@ -10,10 +10,10 @@
     sprite: Clothing/OuterClothing/Coats/bomber.rsi
 
 - type: entity
-  parent: [ClothingOuterStorageBase, AllowSuitStorageClothing]
+  parent: [ClothingOuterStorageBase, AllowSuitStorageClothing, ClothingOuterArmorBasic]
   id: ClothingOuterCoatDetective
   name: detective trenchcoat
-  description: A rugged canvas trenchcoat, designed and created by TX Fabrication Corp. Wearing it makes you feel for the plight of the Tibetans.
+  description: An 18th-century multi-purpose trenchcoat. Someone who wears this means serious business.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/detective.rsi
@@ -23,13 +23,20 @@
     contents:
     - id: SmokingPipeFilledTobacco
     - id: FlippoEngravedLighter
-  - type: Armor #same as regular sec armor
-    modifiers:
-      coefficients:
-        Blunt: 0.70
-        Slash: 0.70
-        Piercing: 0.70
-        Heat: 0.80
+  - type: ExplosionResistance
+    damageCoefficient: 1 #its a coat. it doesnt do shit
+
+- type: entity
+  parent: [ClothingOuterCoatDetectiveLoadout]
+  id: ClothingOuterCoatDetectiveLoadoutGrey
+  name: noir trenchcoat
+  description: Ah, your trusty coat. There's a few tears here and there, giving it a more timely look. Or at least, that's what you told yourself when you found out gettin' it repaired would set you back 200 speos.
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Coats/detective_grey.rsi
+  - type: Clothing
+    sprite: Clothing/OuterClothing/Coats/detective_grey.rsi
+
 
 - type: entity
   parent: ClothingOuterCoatDetective
@@ -83,26 +90,15 @@
     damageCoefficient: 0.9
 
 - type: entity
-  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase]
+  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase, BaseSecurityCommandContraband]
   id: ClothingOuterCoatHoSTrench
   name: head of security's armored trenchcoat
   description: A greatcoat enhanced with a special alloy for some extra protection and style for those with a commanding presence.
   components:
   - type: Sprite
-    sprite: DeltaV/Clothing/OuterClothing/Coats/hos_trenchcoat.rsi # DeltaV - resprite
+    sprite: Clothing/OuterClothing/Coats/hos_trenchcoat.rsi
   - type: Clothing
-    sprite: DeltaV/Clothing/OuterClothing/Coats/hos_trenchcoat.rsi # DeltaV - resprite
-
-- type: entity
-  parent: ClothingOuterStorageBase
-  id: ClothingOuterCoatInspector
-  name: slim trench coat
-  description: A slim minimalist trench coat best worn unbuttoned.
-  components:
-  - type: Sprite
-    sprite: Clothing/OuterClothing/Coats/insp_coat.rsi
-  - type: Clothing
-    sprite: Clothing/OuterClothing/Coats/insp_coat.rsi
+    sprite: Clothing/OuterClothing/Coats/hos_trenchcoat.rsi
 
 - type: entity
   parent: ClothingOuterStorageToggleableBase
@@ -128,7 +124,8 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/trenchcoat.rsi
   - type: TemperatureProtection
-    coefficient: 0.1
+    heatingCoefficient: 0.1
+    coolingCoefficient: 0.1
   - type: Armor
     modifiers:
       coefficients:
@@ -227,7 +224,7 @@
   parent: ClothingOuterStorageFoldableBase
   id: ClothingOuterCoatLabCmo
   name: chief medical officer's lab coat
-  description: Custom made blue lab coat for the Chief Medical Officer, offers improved protection against chemical spills and minor cuts
+  description: Custom made blue lab coat for the Chief Medical Officer, offers improved protection against chemical spills and minor cuts.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_cmo.rsi
@@ -246,15 +243,15 @@
   name: chief medical officer's lab coat
 
 - type: entity
-  parent: ClothingOuterStorageBase
+  parent: ClothingOuterStorageFoldableBase
   id: ClothingOuterCoatRnd
-  name: epistemics lab coat # DeltaV - Epistemics Department replacing Science
+  name: scientist lab coat
   description: A suit that protects against minor chemical spills. Has a purple stripe on the shoulder.
   components:
   - type: Sprite
-    sprite: DeltaV/Clothing/OuterClothing/Coats/epicoat.rsi # DeltaV - Epistemic lab coat
+    sprite: Clothing/OuterClothing/Coats/labcoat_sci.rsi
   - type: Clothing
-    sprite: DeltaV/Clothing/OuterClothing/Coats/epicoat.rsi # DeltaV - Epistemic lab coat
+    sprite: Clothing/OuterClothing/Coats/labcoat_sci.rsi
   - type: Armor
     modifiers:
       coefficients:
@@ -292,9 +289,9 @@
   description: Woven with top of the line technology, this labcoat helps protect against radiation in similar way to the experimental hardsuit.
   components:
   - type: Sprite
-    sprite: Clothing/OuterClothing/Coats/rd_coat.rsi
+    sprite: Clothing/OuterClothing/Coats/labcoat_rd.rsi
   - type: Clothing
-    sprite: Clothing/OuterClothing/Coats/rd_coat.rsi
+    sprite: Clothing/OuterClothing/Coats/labcoat_rd.rsi
   - type: Armor
     modifiers:
       coefficients:
@@ -318,7 +315,7 @@
     sprite: Clothing/OuterClothing/Coats/pirate.rsi
 
 - type: entity
-  parent: [ClothingOuterArmorWarden, ClothingOuterStorageBase]
+  parent: [ClothingOuterArmorWarden, ClothingOuterStorageBase, BaseRestrictedContraband]
   id: ClothingOuterCoatWarden
   name: warden's armored jacket
   description: A sturdy, utilitarian jacket designed to protect a warden from any brig-bound threats.
@@ -379,7 +376,7 @@
     sprite: Clothing/OuterClothing/Coats/windbreaker_paramedic.rsi
 
 - type: entity
-  parent: ClothingOuterStorageBase
+  parent: [ClothingOuterStorageBase, BaseSyndicateContraband]
   id: ClothingOuterCoatSyndieCap
   name: syndicate's coat
   description: The syndicate's coat is made of durable fabric, with gilded patterns.
@@ -390,7 +387,7 @@
     sprite: Clothing/OuterClothing/Coats/syndicate/coatsyndiecap.rsi
 
 - type: entity
-  parent: ClothingOuterCoatHoSTrench
+  parent: [BaseSyndicateContraband, ClothingOuterCoatHoSTrench] # BaseSyndicateContraband as first parent so contraband system takes that as priority, yeah I know
   id: ClothingOuterCoatSyndieCapArmored
   name: syndicate's armored coat
   description: The syndicate's armored coat is made of durable fabric, with gilded patterns.
@@ -410,13 +407,13 @@
     sprite: Clothing/OuterClothing/Coats/brigmedic.rsi
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/brigmedic.rsi
-  - type: Armor # DeltaV - tweak for Velta armour
+  - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.85
+        Blunt: 0.8
         Slash: 0.85
-        Piercing: 0.85
-        Heat: 0.75
+        Piercing: 0.65
+        Heat: 0.85
         Caustic: 0.75
 
 - type: entity

@@ -6,14 +6,20 @@ namespace Content.Shared.Standing;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class StandingStateComponent : Component
 {
+    [ViewVariables(VVAccess.ReadWrite)]
     [DataField]
     public SoundSpecifier DownSound { get; private set; } = new SoundCollectionSpecifier("BodyFall");
 
+    // BACKMEN EDIT START
     [DataField, AutoNetworkedField]
     public StandingState CurrentState { get; set; } = StandingState.Standing;
+    // BACKMEN EDIT END
 
-    [DataField, AutoNetworkedField]
-    public bool Standing { get; set; } = true;
+    public bool Standing
+    {
+        get => CurrentState == StandingState.Standing;
+        set => CurrentState = value ? StandingState.Standing : StandingState.Lying;
+    }
 
     /// <summary>
     ///     List of fixtures that had their collision mask changed when the entity was downed.
@@ -22,10 +28,11 @@ public sealed partial class StandingStateComponent : Component
     [DataField, AutoNetworkedField]
     public List<string> ChangedFixtures = new();
 }
-
+// BACKMEN EDIT START
 public enum StandingState
 {
     Lying,
     GettingUp,
     Standing,
 }
+// BACKMEN EDIT END

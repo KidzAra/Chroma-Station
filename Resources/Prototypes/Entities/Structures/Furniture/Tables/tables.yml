@@ -22,7 +22,7 @@
         layer:
         - TableLayer
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: IconSmooth
     key: state
@@ -79,7 +79,7 @@
         layer:
         - TableLayer
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Wood
   - type: IconSmooth
     key: state
@@ -122,7 +122,7 @@
     sprite: Structures/Furniture/Tables/frame.rsi
     state: full
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: IconSmooth
     key: state
@@ -137,7 +137,7 @@
         acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
-        damage: 15
+        damage: 25
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -166,7 +166,7 @@
   - type: Icon
     sprite: Structures/Furniture/Tables/generic.rsi
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:
@@ -178,7 +178,7 @@
         acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
-        damage: 15
+        damage: 25
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -216,7 +216,7 @@
         acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
-        damage: 30
+        damage: 75
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -263,7 +263,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 15
+        damage: 25
       behaviors:
         - !type:DoActsBehavior
           acts: [ "Destruction" ]
@@ -379,7 +379,7 @@
           collection: GlassBreak
     - trigger:
         !type:DamageTrigger
-        damage: 30
+        damage: 50
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -414,7 +414,7 @@
   - type: Icon
     sprite: Structures/Furniture/Tables/brass.rsi
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:
@@ -426,7 +426,7 @@
         acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
-        damage: 40
+        damage: 25
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -546,7 +546,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 40
+        damage: 50
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -573,7 +573,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 20
+        damage: 50
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
@@ -782,7 +782,7 @@
     sprite: Structures/Furniture/Tables/counterwood.rsi
     state: full
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Wood
   - type: Destructible
     thresholds:
@@ -825,7 +825,7 @@
     sprite: Structures/Furniture/Tables/countermetal.rsi
     state: full
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:

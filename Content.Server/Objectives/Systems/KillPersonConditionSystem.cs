@@ -1,10 +1,15 @@
+using System.Linq;
 using Content.Server.Objectives.Components;
+using Content.Server.Revolutionary.Components;
 using Content.Server.Shuttles.Systems;
+using Content.Server.Station.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Mind;
 using Content.Shared.Objectives.Components;
+using Content.Shared.Roles;
 using Content.Shared.Roles.Jobs;
 using Robust.Shared.Configuration;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
 namespace Content.Server.Objectives.Systems;
@@ -17,9 +22,12 @@ public sealed class KillPersonConditionSystem : EntitySystem
     [Dependency] private readonly EmergencyShuttleSystem _emergencyShuttle = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedJobSystem _job = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;
     [Dependency] private readonly TargetObjectiveSystem _target = default!;
+    [Dependency] private readonly SharedRoleSystem _roleSystem = default!;
+    [Dependency] private readonly IPrototypeManager _prototype = default!;
+
+    private static readonly ProtoId<DepartmentPrototype> _ccDep = "CentCom";
 
     public override void Initialize()
     {
@@ -61,8 +69,40 @@ public sealed class KillPersonConditionSystem : EntitySystem
             return;
         }
 
+        // start-backmen: centcom
+        FilterCentCom(allHumans);
+
+        if (allHumans.Count == 0)
+        {
+            args.Cancelled = true;
+            return;
+        }
+        // end-backmen: centcom
+
         _target.SetTarget(uid, _random.Pick(allHumans), target);
+
     }
+
+    // start-backmen: centcom
+    private void FilterCentCom(List<EntityUid> minds)
+    {
+        var centcom = _prototype.Index(_ccDep);
+        foreach (var mindId in minds.ToArray())
+        {
+            if (!_roleSystem.MindHasRole<JobRoleComponent>(mindId, out var job) || job.Value.Comp1.JobPrototype == null)
+            {
+                continue;
+            }
+
+            if (!centcom.Roles.Contains(job.Value.Comp1.JobPrototype.Value))
+            {
+                continue;
+            }
+
+            minds.Remove(mindId);
+        }
+    }
+    // end-backmen: centcom
 
     private void OnHeadAssigned(EntityUid uid, PickRandomHeadComponent comp, ref ObjectiveAssignedEvent args)
     {
@@ -85,12 +125,21 @@ public sealed class KillPersonConditionSystem : EntitySystem
             return;
         }
 
-        var allHeads = new List<EntityUid>();
-        foreach (var mind in allHumans)
+        // start-backmen: centcom
+        FilterCentCom(allHumans);
+
+        if (allHumans.Count == 0)
         {
-            // RequireAdminNotify used as a cheap way to check for command department
-            if (_job.MindTryGetJob(mind, out _, out var prototype) && prototype.RequireAdminNotify)
-                allHeads.Add(mind);
+            args.Cancelled = true;
+            return;
+        }
+        // end-backmen: centcom
+
+        var allHeads = new List<EntityUid>();
+        foreach (var person in allHumans)
+        {
+            if (TryComp<MindComponent>(person, out var mind) && mind.OwnedEntity is { } ent && HasComp<CommandStaffComponent>(ent))
+                allHeads.Add(person);
         }
 
         if (allHeads.Count == 0)

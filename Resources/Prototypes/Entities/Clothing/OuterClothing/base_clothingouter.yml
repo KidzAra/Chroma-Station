@@ -23,9 +23,6 @@
     walkModifier: 0.9
     sprintModifier: 0.9
   - type: HeldSpeedModifier
-  - type: Tag
-    tags:
-      - WhitelistChameleon
 
 - type: entity
   abstract: true
@@ -112,9 +109,8 @@
     highPressureMultiplier: 0.3
     lowPressureMultiplier: 1000
   - type: TemperatureProtection
-    coefficient: 0.01
-  - type: FireProtection
-    reduction: 0.75 # almost perfectly sealed, atmos firesuit is better
+    heatingCoefficient: 0.01
+    coolingCoefficient: 0.01
   - type: ClothingSpeedModifier
     walkModifier: 0.4
     sprintModifier: 0.6
@@ -137,20 +133,19 @@
   - type: GroupExamine
   - type: Tag
     tags:
+    - FullBodyOuter
     - Hardsuit
     - WhitelistChameleon
-    - HidesHarpyWings #DeltaV: Used by harpies to help render their hardsuit sprites
-    - FullBodyOuter
-  - type: Clothing
-    equipDelay: 2.5 # Hardsuits are heavy and take a while to put on/off.
-    unequipDelay: 2.5
-  - type: Geiger
-    attachedToSuit: true
-    localSoundOnly: true
-  - type: StaminaDamageResistance
-    coefficient: 0.75 # 25%
-  - type: ClothingRequiredStepTriggerImmune
+  - type: ProtectedFromStepTriggers
     slots: WITHOUT_POCKET
+  - type: ClothingGrant
+    component:
+    - type: BkmSupermatterImmune
+  - type: DamageOnInteractProtection
+    damageProtection:
+      flatReductions:
+        Heat: 10 # the average lightbulb only does around four damage!
+    slots: OUTERCLOTHING
 
 - type: entity
   abstract: true
@@ -162,7 +157,8 @@
     highPressureMultiplier: 0.6
     lowPressureMultiplier: 1000
   - type: TemperatureProtection
-    coefficient: 0.01 # Not complete protection from fire
+    heatingCoefficient: 0.01 # Not complete protection from fire
+    coolingCoefficient: 0.01
   - type: ClothingSpeedModifier
     walkModifier: 0.8
     sprintModifier: 0.8
@@ -171,12 +167,13 @@
     size: Huge
   - type: Tag
     tags:
-    - HidesHarpyWings #DeltaV: Used by harpies to help render their hardsuit sprites
-  - type: Clothing
-    equipDelay: 1.25 # Softsuits are easier to put on and off
-    unequipDelay: 1
-  - type: ClothingRequiredStepTriggerImmune
-    slots: WITHOUT_POCKET
+      - FullBodyOuter
+  - type: ProtectedFromStepTriggers
+  - type: DamageOnInteractProtection
+    damageProtection:
+      flatReductions:
+        Heat: 10 # the average lightbulb only does around four damage!
+    slots: OUTERCLOTHING
 
 - type: entity
   parent: ClothingOuterBase

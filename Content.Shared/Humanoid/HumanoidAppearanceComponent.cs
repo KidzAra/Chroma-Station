@@ -1,12 +1,11 @@
+using Content.Shared.Corvax.TTS;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
-using Content.Shared.Preferences; // DeltaV
 using Robust.Shared.Enums;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
-using Content.Shared.Preferences; //DeltaV, used for Metempsychosis, Fugitive, and Paradox Anomaly
 
 namespace Content.Shared.Humanoid;
 
@@ -32,9 +31,6 @@ public sealed partial class HumanoidAppearanceComponent : Component
     [DataField, AutoNetworkedField]
     public int Age = 18;
 
-    [DataField, AutoNetworkedField]
-    public string CustomSpecieName = "";
-
     /// <summary>
     ///     Any custom base layers this humanoid might have. See:
     ///     limb transplants (potentially), robotic arms, etc.
@@ -50,6 +46,14 @@ public sealed partial class HumanoidAppearanceComponent : Component
     /// </summary>
     [DataField(required: true), AutoNetworkedField]
     public ProtoId<SpeciesPrototype> Species { get; set; }
+
+    // Corvax-TTS-Start
+    /// <summary>
+    ///     Current voice. Used for correct cloning.
+    /// </summary>
+    [DataField("voice")]
+    public ProtoId<TTSVoicePrototype> Voice { get; set; } = SharedHumanoidAppearanceSystem.DefaultVoice;
+    // Corvax-TTS-End
 
     /// <summary>
     ///     The initial profile and base layers to apply to this humanoid.
@@ -93,24 +97,6 @@ public sealed partial class HumanoidAppearanceComponent : Component
     /// </summary>
     [DataField]
     public HashSet<HumanoidVisualLayers> HideLayersOnEquip = [HumanoidVisualLayers.Hair];
-
-    /// <summary>
-    /// DeltaV - let paradox anomaly be cloned
-    /// </summary>
-    [ViewVariables]
-    public HumanoidCharacterProfile? LastProfileLoaded;
-
-    /// <summary>
-    ///     The height of this humanoid.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float Height = 1f;
-
-    /// <summary>
-    ///     The width of this humanoid.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float Width = 1f;
 }
 
 [DataDefinition]

@@ -4,18 +4,19 @@
   description: job-description-hos
   playTimeTracker: JobHeadOfSecurity
   requirements:
-    - !type:CharacterPlaytimeRequirement
-      tracker: JobWarden
-      min: 14400 #DeltaV 4 hrs
-  #  - !type:RoleTimeRequirement # DeltaV - No Security Officer time requirement - REIMPLEMENT WHEN MORE PEOPLE HAVE IT
-  #    role: JobDetective
-  #    time: 14400 #DeltaV 4 hrs
-    - !type:CharacterDepartmentTimeRequirement # DeltaV - Command dept time requirement
-      department: Command
-      min: 36000 # 10 hours
-    - !type:CharacterOverallTimeRequirement
-      min: 90000 # DeltaV - 25 hours
-    - !type:CharacterWhitelistRequirement
+    - !type:RoleTimeRequirement
+      role: JobWarden
+      time: 36000 #10 hrs # Corvax-RoleTime
+#    - !type:RoleTimeRequirement
+#      role: JobSecurityOfficer
+#      time: 36000 #10 hrs
+    - !type:DepartmentTimeRequirement
+      department: Security
+      time: 108000 #50 hrs # Corvax-RoleTime
+#    - !type:OverallPlaytimeRequirement
+#      time: 144000 #40 hrs
+    - !type:AgeRequirement
+      requiredAge: 21
   weight: 10
   startingGear: HoSGear
   icon: "JobIconHeadOfSecurity"
@@ -25,33 +26,37 @@
   access:
   - HeadOfSecurity
   - Command
-  #- Brig  # Delta V: Removed
+  - Brig
   - Security
   - Armory
   - Maintenance
   - Service
   - External
   - Detective
-  - Corpsman # DeltaV - added Corpsman access
   - Cryogenics
+  #start-backmen: currency
+  minBankBalance: 400
+  maxBankBalance: 600
+  wageDepartment: Command
+  wage: 100
+  #end-backmen: currency
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
+      - type: NpcFactionMember
+        factions:
+          - CentralCommand
 
 - type: startingGear
   id: HoSGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitHoS
-    back: ClothingBackpackHOSFilled
-    shoes: ClothingShoesBootsCombatFilled
-    eyes: ClothingEyesGlassesSunglasses
+    eyes: ClothingEyesGlassesSecurity
     id: HoSPDA
     gloves: ClothingHandsGlovesCombat
     ears: ClothingHeadsetAltSecurity
-    belt: ClothingBeltSecurityFilled
-  innerClothingSkirt: ClothingUniformJumpskirtHoS
-  satchel: ClothingBackpackSatchelHOSFilled
-  duffelbag: ClothingBackpackDuffelHOSFilled
+  storage:
+    back:
+    - Flash

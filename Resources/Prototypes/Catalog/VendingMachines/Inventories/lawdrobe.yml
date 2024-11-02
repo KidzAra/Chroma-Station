@@ -12,15 +12,26 @@
     ClothingUniformJumpsuitLawyerGood: 1
     ClothingUniformJumpskirtLawyerGood: 1
     ClothingShoesBootsLaceup: 2
-    ClothingHeadsetService: 2
+    ClothingHeadsetIAA: 2 # Corvax-IAA
     ClothingNeckLawyerbadge: 2
-    ClothingOuterCoatOvercoat: 2 # DeltaV - add overcoat to LawDrobe
-    RubberStampLawyer: 1 # DeltaV
     BriefcaseBrown: 2
+    BookSpaceLaw: 3
+    # Corvax-LawyerDrip-Start
+    ClothingHandsGlovesColorWhite: 1
+    ClothingHandsGlovesColorGray: 1
+    ClothingHandsGlovesColorBlack: 1
+    ClothingHandsGlovesColorRed: 1
+    ClothingHandsGlovesColorBlue: 1
+    ClothingHeadHatBowlerHat: 1
+    ClothingHeadHatOutlawHat: 1
+    ClothingHeadHatTophat: 1
+    # Corvax-LawyerDrip-End
     LuxuryPen: 2
+    HandLabeler: 2
   contrabandInventory:
     ClothingOuterRobesJudge: 1
     ClothingHeadHatPwig: 1
-    SpaceCash100: 2 # "Legally" obtained currency
+    # "Legally" obtained currency
+    SpaceCash100: 2
   emaggedInventory:
     CyberPen: 1

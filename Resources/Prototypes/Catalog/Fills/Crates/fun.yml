@@ -1,3 +1,47 @@
+- type: entityTable
+  id: AllPlushiesTable
+  table: !type:GroupSelector
+    children:
+    - id: PlushieBee
+    - id: PlushieNar
+      weight: 0.5
+    - id: PlushieRatvar
+      weight: 0.5
+    - id: PlushieNuke
+    - id: PlushieSlime
+    - id: PlushieSnake
+    - !type:GroupSelector
+      children:
+      - id: PlushieLizard
+        weight: 9
+      - id: PlushieSpaceLizard
+        weight: 1
+    - !type:GroupSelector
+      children:
+      - id: PlushieCarp
+      - id: PlushieHolocarp
+        weight: 0.25
+      - id: PlushieMagicarp
+        weight: 0.25
+      - id: PlushieRainbowCarp
+        weight: 0.15
+    - id: PlushieVox
+    - id: PlushieRouny
+    - !type:GroupSelector
+      children:
+      - id: PlushieSharkBlue
+      - id: PlushieSharkGrey
+      - id: PlushieSharkPink
+    - id: PlushieAtmosian
+    - id: PlushieDiona
+    - id: PlushieXeno
+    - id: PlushieHampter
+    - id: PlushieMoth
+    - id: PlushieArachind
+    - id: PlushiePenguin
+
+# Removed crates with toys because EE toys
+
 - type: entity
   id: CrateFunInstrumentsVariety
   parent: CrateGenericSteel
@@ -261,7 +305,9 @@
       - id: ClothingShoesClownLarge
       - id: ClothingHeadHatMagician
       - id: BeachBall
+      - id: RubberPig
       - id: ClothingShoesSkates
+      - id: RubberChicken
 
 - type: entity
   id: CrateFunBikeHornImplants

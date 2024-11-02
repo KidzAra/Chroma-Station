@@ -1,6 +1,5 @@
 using System.Linq;
 using Content.Client.Gameplay;
-using Content.Shared.CCVar;
 using Content.Shared.CombatMode;
 using Content.Shared.Effects;
 using Content.Shared.Hands.Components;
@@ -29,6 +28,7 @@ public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
     [Dependency] private readonly AnimationPlayerSystem _animation = default!;
     [Dependency] private readonly InputSystem _inputSystem = default!;
     [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
+    [Dependency] private readonly MapSystem _map = default!;
 
     private EntityQuery<TransformComponent> _xformQuery;
 
@@ -65,7 +65,7 @@ public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
         if (!TryGetWeapon(entity, out var weaponUid, out var weapon))
             return;
 
-        if (!CombatMode.IsInCombatMode(entity) || !Blocker.CanAttack(entity))
+        if (!CombatMode.IsInCombatMode(entity) || !Blocker.CanAttack(entity, weapon: (weaponUid, weapon)))
         {
             weapon.Attacking = false;
             return;
@@ -110,11 +110,11 @@ public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
 
         if (MapManager.TryFindGridAt(mousePos, out var gridUid, out _))
         {
-            coordinates = EntityCoordinates.FromMap(gridUid, mousePos, TransformSystem, EntityManager);
+            coordinates = TransformSystem.ToCoordinates(gridUid, mousePos);
         }
         else
         {
-            coordinates = EntityCoordinates.FromMap(MapManager.GetMapEntityId(mousePos.MapId), mousePos, TransformSystem, EntityManager);
+            coordinates = TransformSystem.ToCoordinates(_map.GetMap(mousePos.MapId), mousePos);
         }
 
         // Heavy attack.
@@ -141,7 +141,7 @@ public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
         // Light attack
         if (useDown == BoundKeyState.Down)
         {
-            var attackerPos = Transform(entity).MapPosition;
+            var attackerPos = TransformSystem.GetMapCoordinates(entity);
 
             if (mousePos.MapId != attackerPos.MapId ||
                 (attackerPos.Position - mousePos.Position).Length() > weapon.Range)
@@ -221,19 +221,19 @@ public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
             return;
         }
 
-        var targetMap = coordinates.ToMap(EntityManager, TransformSystem);
+        var targetMap = TransformSystem.ToMapCoordinates(coordinates);
 
         if (targetMap.MapId != userXform.MapID)
             return;
 
         var userPos = TransformSystem.GetWorldPosition(userXform);
         var direction = targetMap.Position - userPos;
-        var distance = MathF.Min(component.Range * component.HeavyRangeModifier, direction.Length());
+        var distance = MathF.Min(component.Range, direction.Length());
 
         // This should really be improved. GetEntitiesInArc uses pos instead of bounding boxes.
         // Server will validate it with InRangeUnobstructed.
         var entities = GetNetEntityList(ArcRayCast(userPos, direction.ToWorldAngle(), component.Angle, distance, userXform.MapID, user).ToList());
-        RaisePredictiveEvent(new HeavyAttackEvent(GetNetEntity(meleeUid), entities.GetRange(0, Math.Min(component.MaxTargets, entities.Count)), GetNetCoordinates(coordinates)));
+        RaisePredictiveEvent(new HeavyAttackEvent(GetNetEntity(meleeUid), entities.GetRange(0, Math.Min(MaxTargets, entities.Count)), GetNetCoordinates(coordinates)));
     }
 
     private void OnMeleeLunge(MeleeLungeEvent ev)

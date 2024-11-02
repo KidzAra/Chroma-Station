@@ -4,17 +4,19 @@
   description: job-description-ce
   playTimeTracker: JobChiefEngineer
   requirements:
-    - !type:CharacterPlaytimeRequirement
-      tracker: JobAtmosphericTechnician
-      min: 36000 # DeltaV - 10 hours
-#    - !type:RoleTimeRequirement # DeltaV - No Station Engineer time requirement
+    - !type:RoleTimeRequirement
+      role: JobAtmosphericTechnician
+      time: 36000 #10 hrs # Corvax-RoleTime
+#    - !type:RoleTimeRequirement
 #      role: JobStationEngineer
 #      time: 21600 #6 hrs
-    - !type:CharacterDepartmentTimeRequirement
+    - !type:DepartmentTimeRequirement
       department: Engineering
-      min: 90000 # DeltaV - 25 hours
+      time: 54000 #15 hrs # Corvax-RoleTime
 #    - !type:OverallPlaytimeRequirement
-#      time: 72000 # DeltaV - 20 hours
+#      time: 144000 #40 hrs
+    - !type:AgeRequirement
+      requiredAge: 21
   weight: 10
   startingGear: ChiefEngineerGear
   icon: "JobIconChiefEngineer"
@@ -28,8 +30,22 @@
   - External
   - ChiefEngineer
   - Atmospherics
+  - Brig
   - Cryogenics
+  #start-backmen: currency
+  minBankBalance: 400
+  maxBankBalance: 600
+  wageDepartment: Command
+  wage: 100
+  #end-backmen: currency
   special:
+  - !type:AddComponentSpecial
+    components:
+      - type: PsionicBonusChance
+        flatBonus: 0.025
+      - type: NpcFactionMember
+        factions:
+          - CentralCommand
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
   - !type:AddComponentSpecial
@@ -39,13 +55,10 @@
 - type: startingGear
   id: ChiefEngineerGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitChiefEngineer
-    back: ClothingBackpackChiefEngineerFilled
-    shoes: ClothingShoesColorBrown
     id: CEPDA
     eyes: ClothingEyesGlassesMeson
     ears: ClothingHeadsetCE
     belt: ClothingBeltUtilityEngineering
-  innerClothingSkirt: ClothingUniformJumpskirtChiefEngineer
-  satchel: ClothingBackpackSatchelChiefEngineerFilled
-  duffelbag: ClothingBackpackDuffelChiefEngineerFilled
+  storage:
+    back:
+    - Flash

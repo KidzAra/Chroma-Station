@@ -44,11 +44,3 @@
 - type: metabolizerType
   id: Arachnid
   name: metabolizer-type-arachnid
-
-- type: metabolizerType
-  id: Vampiric
-  name: metabolizer-type-vampiric
-
-- type: metabolizerType
-  id: LiquorLifeline
-  name: metabolizer-type-liquorlifeline

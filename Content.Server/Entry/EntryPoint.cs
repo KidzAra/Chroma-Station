@@ -5,9 +5,9 @@ using Content.Server.Administration.Managers;
 using Content.Server.Afk;
 using Content.Server.Chat.Managers;
 using Content.Server.Connection;
-using Content.Server.JoinQueue;
+using Content.Server.Corvax.GuideGenerator;
+using Content.Server.Corvax.TTS;
 using Content.Server.Database;
-using Content.Server.DiscordAuth;
 using Content.Server.EUI;
 using Content.Server.GameTicking;
 using Content.Server.GhostKick;
@@ -16,7 +16,11 @@ using Content.Server.Info;
 using Content.Server.IoC;
 using Content.Server.Maps;
 using Content.Server.NodeContainer.NodeGroups;
+using Content.Server.Objectives;
+using Content.Server.Players;
+using Content.Server.Players.JobWhitelist;
 using Content.Server.Players.PlayTimeTracking;
+using Content.Server.Players.RateLimiting;
 using Content.Server.Preferences.Managers;
 using Content.Server.ServerInfo;
 using Content.Server.ServerUpdates;
@@ -69,7 +73,6 @@ namespace Content.Server.Entry
             factory.RegisterIgnore(IgnoredComponents.List);
 
             prototypes.RegisterIgnore("parallax");
-            prototypes.RegisterIgnore("guideEntry");
 
             ServerContentIoC.Register();
 
@@ -103,14 +106,22 @@ namespace Content.Server.Entry
                 IoCManager.Resolve<INodeGroupFactory>().Initialize();
                 IoCManager.Resolve<ContentNetworkResourceManager>().Initialize();
                 IoCManager.Resolve<GhostKickManager>().Initialize();
+                IoCManager.Resolve<TTSManager>().Initialize(); // Corvax-TTS
                 IoCManager.Resolve<ServerInfoManager>().Initialize();
-                IoCManager.Resolve<JoinQueueManager>().Initialize();
-                IoCManager.Resolve<DiscordAuthManager>().Initialize();
                 IoCManager.Resolve<ServerApi>().Initialize();
+
+                // start-backmen: IoC
+                IoCManager.Resolve<Content.Corvax.Interfaces.Shared.ISharedSponsorsManager>().Initialize();
+                IoCManager.Resolve<Content.Corvax.Interfaces.Server.IServerDiscordAuthManager>().Initialize();
+                IoCManager.Resolve<Content.Corvax.Interfaces.Server.IServerJoinQueueManager>().Initialize();
+                IoCManager.Resolve<Content.Corvax.Interfaces.Shared.ISharedLoadoutsManager>().Initialize();
+                // end-backmen: IoC
 
                 _voteManager.Initialize();
                 _updateManager.Initialize();
                 _playTimeTracking.Initialize();
+                IoCManager.Resolve<JobWhitelistManager>().Initialize();
+                IoCManager.Resolve<PlayerRateLimitManager>().Initialize();
             }
         }
 
@@ -132,6 +143,17 @@ namespace Content.Server.Entry
                 file = resourceManager.UserData.OpenWriteText(resPath.WithName("react_" + dest));
                 ReactionJsonGenerator.PublishJson(file);
                 file.Flush();
+                // Corvax-Wiki-Start
+                file = resourceManager.UserData.OpenWriteText(resPath.WithName("entity_" + dest));
+                EntityJsonGenerator.PublishJson(file);
+                file.Flush();
+                file = resourceManager.UserData.OpenWriteText(resPath.WithName("mealrecipes_" + dest));
+                MealsRecipesJsonGenerator.PublishJson(file);
+                file.Flush();
+                file = resourceManager.UserData.OpenWriteText(resPath.WithName("healthchangereagents_" + dest));
+                HealthChangeReagentsJsonGenerator.PublishJson(file);
+                file.Flush();
+                // Corvax-Wiki-End
                 IoCManager.Resolve<IBaseServer>().Shutdown("Data generation done");
             }
             else
@@ -145,6 +167,10 @@ namespace Content.Server.Entry
                 IoCManager.Resolve<IGameMapManager>().Initialize();
                 IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<GameTicker>().PostInitialize();
                 IoCManager.Resolve<IBanManager>().Initialize();
+                // start-backmen: IoC
+                IoCManager.Resolve<Content.Corvax.Interfaces.Server.IServerJoinQueueManager>().PostInitialize();
+                // end-backmen: IoC
+                IoCManager.Resolve<IConnectionManager>().PostInit();
             }
         }
 

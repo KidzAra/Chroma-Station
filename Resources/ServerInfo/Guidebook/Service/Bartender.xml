@@ -7,7 +7,7 @@ The materials for these drinks can be found in various places:
 </Box>
 <Box>
 <GuideEntityEmbed Entity="BoozeDispenser"/>
-<GuideEntityEmbed Entity="soda_dispenser"/>
+<GuideEntityEmbed Entity="SodaDispenser"/>
 <GuideEntityEmbed Entity="VendingMachineBooze"/>
 </Box>
 
@@ -21,8 +21,8 @@ Don't forget containers to serve them in!
 <GuideEntityEmbed Entity="DrinkJigger"/>
 </Box>
 
-## Drinks
-Knowing how to make a requested drink is important. Here are the different drinks in the game, including their recipes:
+## Напитки
+Знание того, как приготовить требуемый напиток, очень важно. Здесь представлены различные напитки, включая их рецепты:
 
 <GuideReagentGroupEmbed Group="Drinks"/>
 </Document>

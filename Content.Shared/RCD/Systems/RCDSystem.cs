@@ -142,6 +142,14 @@ public class RCDSystem : EntitySystem
             return;
         }
 
+        // start-backmen: protect system
+        if (HasComp<Shared.Tiles.ProtectedGridComponent>(mapGridData.Value.GridUid))
+        {
+            _popup.PopupClient(Loc.GetString("rcd-component-no-valid-grid"), uid, user);
+            return;
+        }
+        // end-backmen: protect system
+
         if (!IsRCDOperationStillValid(uid, component, mapGridData.Value, args.Target, args.User))
             return;
 
@@ -211,11 +219,10 @@ public class RCDSystem : EntitySystem
         {
             BreakOnDamage = true,
             BreakOnHandChange = true,
-            BreakOnUserMove = true,
-            BreakOnTargetMove = args.Target != null,
+            BreakOnMove = true,
             AttemptFrequency = AttemptFrequency.EveryTick,
             CancelDuplicate = false,
-            BlockDuplicate = false,
+            BlockDuplicate = false
         };
 
         args.Handled = true;
@@ -572,8 +579,6 @@ public class RCDSystem : EntitySystem
             if (!TryComp(gridUid, out mapGrid))
                 return false;
         }
-
-        gridUid = mapGrid.Owner;
 
         var tile = _mapSystem.GetTileRef(gridUid.Value, mapGrid, location);
         var position = _mapSystem.TileIndicesFor(gridUid.Value, mapGrid, location);

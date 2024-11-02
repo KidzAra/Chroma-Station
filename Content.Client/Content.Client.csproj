@@ -24,11 +24,26 @@
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Spawners\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Lobby\UI\LobbyCharacterPanel.xaml.cs">
-      <DependentUpon>LobbyCharacterPanel.xaml</DependentUpon>
+    <Compile Update="Backmen\Reinforcement\UI\ReinforcementConsoleWindow.cs">
+      <DependentUpon>ReinforcementConsoleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Backmen\Reinforcement\UI\ReinforcementRow.cs">
+      <DependentUpon>ReinforcementRow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Backmen\Reinforcement\UI\ActiveReinforcementRow.cs">
+      <DependentUpon>ActiveReinforcementRow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Backmen\Economy\WageConsole\UI\WageConsoleWindow.cs">
+      <DependentUpon>WageConsoleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Backmen\Economy\WageConsole\UI\WageRow.cs">
+      <DependentUpon>WageRow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Backmen\Economy\WageConsole\UI\EditWageRowWindow.cs">
+      <DependentUpon>EditWageRowWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Backmen\Economy\WageConsole\UI\BonusWageWindow.cs">
+      <DependentUpon>BonusWageWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />

@@ -9,6 +9,9 @@
     sprite: Clothing/OuterClothing/Bio/general.rsi
   - type: Clothing
     sprite: Clothing/OuterClothing/Bio/general.rsi
+  - type: Tag
+    tags:
+      - FullBodyOuter
   - type: Armor
     modifiers:
       coefficients:
@@ -25,6 +28,9 @@
     sprite: Clothing/OuterClothing/Bio/cmo.rsi
   - type: Clothing
     sprite: Clothing/OuterClothing/Bio/cmo.rsi
+  - type: Tag
+    tags:
+      - FullBodyOuter
 
 - type: entity
   parent: ClothingOuterBioGeneral
@@ -42,7 +48,7 @@
   parent: ClothingOuterBioGeneral
   id: ClothingOuterBioScientist
   name: bio suit
-  suffix: Epistemics # DeltaV - Epistemics Department replacing Science
+  suffix: Science
   description: A suit that protects against biological contamination, in Scientist colors.
   components:
   - type: Sprite

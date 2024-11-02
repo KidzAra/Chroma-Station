@@ -2,44 +2,42 @@
 - type: entity
   parent: ClothingOuterEVASuitBase
   id: ClothingOuterHardsuitEVA
-  name: vacsuit
-  description: A lightweight vacsuit with the basic ability to protect the wearer from the vacuum of space during emergencies.
+  name: EVA suit
+  description: A lightweight space suit with the basic ability to protect the wearer from the vacuum of space during emergencies.
   components:
   - type: Sprite
-    sprite: Clothing/OuterClothing/Suits/eva.rsi
+    sprite: Backmen/Clothing/OuterClothing/Suits/eva.rsi # backmen resprite
   - type: Clothing
-    sprite: Clothing/OuterClothing/Suits/eva.rsi
+    sprite: Backmen/Clothing/OuterClothing/Suits/eva.rsi # backmen resprite
   - type: Tag
     tags:
     - SuitEVA
     - MonkeyWearable
     - WhitelistChameleon
-    - HidesHarpyWings
 
 #Syndicate EVA
 - type: entity
-  parent: ClothingOuterEVASuitBase
+  parent: [ ClothingOuterEVASuitBase, BaseSyndicateContraband ]
   id: ClothingOuterHardsuitSyndicate # TODO: rename to ClothingOuterEVASuitSyndicate
-  name: syndicate vacsuit
+  name: syndicate EVA suit
   description: "Has a tag on the back that reads: 'Totally not property of an enemy corporation, honest!'"
   components:
   - type: Sprite
-    sprite: Clothing/OuterClothing/Suits/eva_syndicate.rsi
+    sprite: Backmen/Clothing/OuterClothing/Suits/eva_syndicate.rsi # backmen resprite
   - type: Clothing
-    sprite: Clothing/OuterClothing/Suits/eva_syndicate.rsi
+    sprite: Backmen/Clothing/OuterClothing/Suits/eva_syndicate.rsi # backmen resprite
   - type: Tag
     tags:
     - SuitEVA
     - MonkeyWearable
     - WhitelistChameleon
-    - HidesHarpyWings
 
 #Emergency EVA
 - type: entity
   parent: ClothingOuterEVASuitBase
   id: ClothingOuterSuitEmergency
-  name: emergency vacsuit
-  description: An emergency vacsuit with a built-in helmet. It's horribly slow and lacking in temperature protection, but enough to bide you time from the harsh vaccuum of space.
+  name: emergency EVA suit
+  description: An emergency EVA suit with a built-in helmet. It's horribly slow and lacking in temperature protection, but enough to buy you time from the harsh vacuum of space.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/eva_emergency.rsi
@@ -50,7 +48,8 @@
     sprintModifier: 0.7
   - type: HeldSpeedModifier
   - type: TemperatureProtection
-    coefficient: 0.5
+    heatingCoefficient: 0.75
+    coolingCoefficient: 0.5
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetEVALarge
     slot: head
@@ -62,7 +61,7 @@
 - type: entity
   parent: ClothingOuterEVASuitBase
   id:  ClothingOuterHardsuitEVAPrisoner
-  name: prisoner vacsuit
+  name: prisoner EVA suit
   description: A lightweight space suit for prisoners to protect them from the vacuum of space during emergencies.
   components:
   - type: Sprite
@@ -74,14 +73,13 @@
     - SuitEVA
     - MonkeyWearable
     - WhitelistChameleon
-    - HidesHarpyWings
 
 #NTSRA Voidsuit / Ancient Voidsuit
 - type: entity
   parent: ClothingOuterEVASuitBase
   id: ClothingOuterHardsuitAncientEVA
-  name: NTSRA vacsuit #Nanotrasen Space Research Association
-  description: An ancient vacsuit, designed by the NTSRA branch of CentCom. It is very finely crafted, allowing for greater mobility than most modern vacsuits.
+  name: NTSRA voidsuit #Nanotrasen Space Research Association
+  description: An ancient space suit, designed by the NTSRA branch of CentComm. It is very finely crafted, allowing for greater mobility than most modern space suits.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/ancient_voidsuit.rsi
@@ -91,3 +89,41 @@
     walkModifier: 0.85
     sprintModifier: 0.85
   - type: HeldSpeedModifier
+
+#Paramedic Voidsuit
+#Despite having resistances and looking like a hardsuit, this parents off the EVA suit so it goes here.
+- type: entity
+  parent: ClothingOuterEVASuitBase
+  id: ClothingOuterHardsuitVoidParamed
+  name: paramedic void suit
+  description: A void suit made for paramedics.
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Hardsuits/paramed.rsi
+  - type: Clothing
+    sprite: Clothing/OuterClothing/Hardsuits/paramed.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.5
+    lowPressureMultiplier: 1000
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+  - type: HeldSpeedModifier
+  - type: TemperatureProtection
+    heatingCoefficient: 0.1
+    coolingCoefficient: 0.1
+  - type: Armor
+    modifiers:
+      coefficients:
+        Heat: 0.90
+        Radiation: 0.75
+        Caustic: 0.5
+  - type: GroupExamine
+  - type: StealTarget
+    stealGroup: ClothingOuterHardsuitVoidParamed
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetVoidParamed
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot {}

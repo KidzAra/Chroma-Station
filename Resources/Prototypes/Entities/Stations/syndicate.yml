@@ -11,6 +11,7 @@
   parent:
   - BaseStation
   - BaseStationSyndicate
-  noSpawn: true
+  - BaseStationRecords # backmen
+  categories: [ HideSpawnMenu ]
   components:
     - type: Transform

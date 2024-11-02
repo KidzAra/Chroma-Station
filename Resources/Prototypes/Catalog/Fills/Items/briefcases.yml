@@ -16,9 +16,8 @@
   - type: Item
     size: Ginormous
   - type: Storage
-    maxItemSize: Huge
     grid:
-    - 0,0,6,3
+    - 0,0,6,4
   - type: StorageFill
     contents:
       - id: WeaponSniperHristov
@@ -36,7 +35,7 @@
   - type: StorageFill
     contents:
       - id: ClothingEyesGlassesSunglasses
-      - id: SpaceCash30000
+      - id: CargoCash30000
         amount: 1
       - id: EncryptionKeySyndie
       - id: RubberStampTrader
@@ -55,10 +54,7 @@
   - type: StorageFill
     contents:
       - id: ClothingEyesGlassesSunglasses
-      - id: SpaceCash20000
+      - id: SpaceCash2500
         amount: 1
-      - id: ClothingUniformJumpsuitTacticool
       - id: ClothingOuterCoatJensen
-      - id: ClothingHandsGlovesCombat
-      - id: ClothingMaskNeckGaiter
-      - id: ToyFigurineThief
+      - id: ClothingHandsGlovesColorBlack

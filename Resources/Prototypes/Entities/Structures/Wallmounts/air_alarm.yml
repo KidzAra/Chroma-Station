@@ -7,6 +7,7 @@
     snap:
     - Wallmount
   components:
+  - type: StationAiWhitelist
   - type: WallMount
   - type: ApcPowerReceiver
   - type: Electrified
@@ -44,8 +45,8 @@
     layerMap: "airAlarmBase"
     alarmStates:
       Normal: alarm0
-      Warning: alarm2
-      Danger: alarm1
+      Warning: alarm1  # Corvax-Resprite
+      Danger: alarm2 # Corvax-Resprite
     setOnDepowered:
       airAlarmBase: alarmp
   - type: Tag
@@ -90,7 +91,7 @@
     graph: AirAlarm
     node: air_alarm
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:

@@ -139,7 +139,7 @@
   - type: StorageFill
     contents:
         - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitCombatOfficer # DeltaV - ClothingOuterHardsuitSecurity replaced in favour of security combat hardsuit.
+        - id: ClothingOuterHardsuitSecurity
         - id: ClothingMaskBreath
   - type: AccessReader
     access: [["Security"]]
@@ -150,13 +150,10 @@
   parent: SuitStorageBase
   suffix: Chief Engineer
   components:
-  - type: StorageFill
-    contents:
-        - id: OxygenTankFilled
-        - id: JetpackVoidFilled
-        - id: ClothingShoesBootsMagAdv
-        - id: ClothingOuterHardsuitEngineeringWhite
-        - id: ClothingMaskBreath
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: FillChiefEngineerHardsuit
   - type: AccessReader
     access: [["ChiefEngineer"]]
 
@@ -166,11 +163,10 @@
   parent: SuitStorageBase
   suffix: Chief Medical Officer
   components:
-  - type: StorageFill
-    contents:
-        - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitMedical
-        - id: ClothingMaskBreathMedical
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: FillChiefMedicalOfficerHardsuit
   - type: AccessReader
     access: [ [ "ChiefMedicalOfficer" ] ]
 
@@ -178,13 +174,12 @@
 - type: entity
   id: SuitStorageRD
   parent: SuitStorageBase
-  suffix: Mystagogue # DeltaV - Epistemics Department replacing Science
+  suffix: Research Director
   components:
-  - type: StorageFill
-    contents:
-        - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitRd
-        - id: ClothingMaskBreath
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: FillResearchDirectorHardsuit
   - type: AccessReader
     access: [ [ "ResearchDirector" ] ]
 
@@ -194,12 +189,10 @@
   parent: SuitStorageBase
   suffix: Head of Security
   components:
-  - type: StorageFill
-    contents:
-        - id: OxygenTankFilled
-        - id: JetpackSecurityFilled
-        - id: ClothingOuterHardsuitCombatHoS # DeltaV - ClothingOuterHardsuitSecurityRed replaced in favour of head of security's advanced combat hardsuit.
-        - id: ClothingMaskGasSwat
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: FillHeadOfSecurityHardsuit
   - type: AccessReader
     access: [["HeadOfSecurity"]]
 
@@ -212,7 +205,7 @@
   - type: StorageFill
     contents:
         - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitCombatWarden # DeltaV - ClothingOuterHardsuitWarden replaced in favour of warden's riot combat hardsuit.
+        - id: ClothingOuterHardsuitWarden
         - id: ClothingMaskBreath
   - type: AccessReader
     access: [["Armory"]]
@@ -223,11 +216,10 @@
   parent: SuitStorageBase
   suffix: Captain
   components:
-  - type: StorageFill
-    contents:
-        - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitCap
-        - id: ClothingMaskGasCaptain
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: FillCaptainHardsuit
   - type: AccessReader
     access: [["Captain"]]
 
@@ -237,47 +229,12 @@
   parent: SuitStorageBase
   suffix: Salvage
   components:
-  - type: StorageFill
-    contents:
-      - id: OxygenTankFilled
-      - id: ClothingShoesBootsMag
-      - id: ClothingOuterHardsuitSpatio
-      - id: ClothingMaskGasExplorer
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: FillSalvageSpecialistHardsuitSpatio
   - type: AccessReader
     access: [["Salvage"]]
-
-# DeltaV - Adding Paramedic Suit Storage Unit
-#Paramedic hardsuit
-- type: entity
-  id: SuitStorageParamedic
-  parent: SuitStorageBase
-  suffix: Paramedic
-  components:
-  - type: StorageFill
-    contents:
-        - id: NitrogenTankFilled
-        - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitVoidParamed
-        - id: ClothingMaskBreathMedical
-  - type: AccessReader
-    access: [ [ "Paramedic" ] ]
-
-# DeltaV - Adding Corpsman Suit Storage Unit
-- type: entity
-  id: SuitStorageCorpsman
-  parent: SuitStorageBase
-  suffix: Corpsman
-  components:
-  - type: StorageFill
-    contents:
-      - id: NitrogenTankFilled
-      - id: OxygenTankFilled
-      - id: ClothingOuterHardsuitCombatCorpsman
-      - id: ClothingMaskBreath
-  - type: AccessReader
-    access: [ [ "Corpsman" ] ]
-
-# DeltaV - End Changes
 
 #Blood-red hardsuit
 - type: entity

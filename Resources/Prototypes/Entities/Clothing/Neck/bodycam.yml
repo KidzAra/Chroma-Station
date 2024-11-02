@@ -1,5 +1,5 @@
 - type: entity
-  parent: ClothingNeckMedalBase
+  parent: ClothingNeckBase
   id: Bodycam
   name: Бодикамера
   description: Большой брат следит за вами.

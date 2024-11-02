@@ -1,6 +1,6 @@
 - type: font
   id: Default
-  path: /Fonts/tektur.ttf
+  path: /Fonts/NotoSans/NotoSans-Regular.ttf
 
 - type: font
   id: DefaultItalic
@@ -45,23 +45,3 @@
 - type: font
   id: Emoji
   path: /Fonts/NotoEmoji.ttf
-
-- type: font
-  id: RubikBubbles
-  path: /Fonts/RubikBubbles.ttf
-
-- type: font
-  id: Copperplate
-  path: /Fonts/Copperplate.otf
-
-- type: font
-  id: Manga
-  path: /Fonts/Mangat.ttf
-
-- type: font
-  id: Noganas
-  path: /Fonts/Noganas.ttf
-
-- type: font
-  id: Cambria
-  path: /Fonts/Cambria.ttf

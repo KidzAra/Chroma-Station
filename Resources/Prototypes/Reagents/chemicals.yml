@@ -81,6 +81,30 @@
         - !type:ReagentThreshold
           min: 5
 
+- type: reaction
+  id: SyntheticBlood
+  reactants:
+    InactiveBlood:
+      amount: 1
+    Oxygen:
+      amount: 1
+  products:
+    SyntheticBlood: 1
+
+- type: reaction
+  id: InactiveBlood
+  reactants:
+    Hydrogen:
+      amount: 1
+    Carbon:
+      amount: 1
+    Iron:
+      amount: 1
+    Plasma:
+      amount: 0.1
+  products:
+    InactiveBlood: 2.5
+
 - type: reagent
   id: Benzene
   name: reagent-name-benzene
@@ -166,3 +190,23 @@
   color: "#E6E6DA"
   physicalDesc: reagent-physical-desc-crystalline
   slippery: false
+
+- type: reagent
+  id: Rororium
+  name: reagent-name-rororium
+  desc: reagent-desc-rororium
+  group: Biological
+  flavor: tingly
+  physicalDesc: reagent-physical-desc-refreshing
+  color: "#bf1365"
+  metabolisms:
+    Medicine:
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Brute: -4
+      - !type:GenericStatusEffect
+        key: Adrenaline
+        component: IgnoreSlowOnDamage
+        time: 120

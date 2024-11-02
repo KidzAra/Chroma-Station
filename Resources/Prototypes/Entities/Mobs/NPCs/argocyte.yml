@@ -15,11 +15,17 @@
   - type: Sprite
     sprite: Mobs/Aliens/Argocyte/argocyte_common.rsi
   - type: SolutionContainerManager
-  - type: LanguageKnowledge
+#  - type: ReplacementAccent
+#    accent: xeno
+  - type: LanguageSpeaker
+    currentLanguage: TauCetiBasic
+  - type: LanguageKnowledge #backmen: languages
     speaks:
-    - Xeno
+    - SpaceMob
+    - Argocyte
     understands:
-    - Xeno
+    - SpaceMob
+    - Argocyte
   - type: Bloodstream
     bloodReagent: FerrochromicAcid
     bloodMaxVolume: 75 #we don't want the map to become pools of blood
@@ -51,7 +57,6 @@
     sprite: Mobs/Effects/onfire.rsi
     normalState: Generic_mob_burning
   - type: Climbing
-  - type: Flashable
   - type: NameIdentifier
     group: GenericNumber
 

@@ -62,9 +62,7 @@ public sealed class ElectrocutionSystem : SharedElectrocutionSystem
     [ValidatePrototypeId<DamageTypePrototype>]
     private const string DamageType = "Shock";
 
-    // Yes, this is absurdly small for a reason.
-    public const float ElectrifiedDamagePerWatt = 0.0015f; // This information is allowed to be public, and was needed in BatteryElectrocuteChargeSystem.cs
-
+    // Multiply and shift the log scale for shock damage.
     private const float RecursiveDamageMultiplier = 0.75f;
     private const float RecursiveTimeMultiplier = 0.8f;
 
@@ -168,7 +166,7 @@ public sealed class ElectrocutionSystem : SharedElectrocutionSystem
         if (!electrified.OnAttacked)
             return;
 
-        if (!_meleeWeapon.GetDamage(args.Used, args.User).Any())
+        if (_meleeWeapon.GetDamage(args.Used, args.User).Empty)
             return;
 
         TryDoElectrifiedAct(uid, args.User, 1, electrified);
@@ -185,7 +183,7 @@ public sealed class ElectrocutionSystem : SharedElectrocutionSystem
         if (!component.CurrentLit || args.Used != args.User)
             return;
 
-        if (!_meleeWeapon.GetDamage(args.Used, args.User).Any())
+        if (_meleeWeapon.GetDamage(args.Used, args.User).Empty)
             return;
 
         DoCommonElectrocution(args.User, uid, component.UnarmedHitShock, component.UnarmedHitStun, false);
@@ -302,9 +300,9 @@ public sealed class ElectrocutionSystem : SharedElectrocutionSystem
             || !DoCommonElectrocution(uid, sourceUid, shockDamage, time, refresh, siemensCoefficient, statusEffects))
             return false;
 
-        RaiseLocalEvent(uid, new ElectrocutedEvent(uid, sourceUid, siemensCoefficient, shockDamage), true);
-            return true;
-        }
+        RaiseLocalEvent(uid, new ElectrocutedEvent(uid, sourceUid, siemensCoefficient), true);
+        return true;
+    }
 
     private bool TryDoElectrocutionPowered(
         EntityUid uid,
@@ -352,7 +350,7 @@ public sealed class ElectrocutionSystem : SharedElectrocutionSystem
         electrocutionComponent.Electrocuting = uid;
         electrocutionComponent.Source = sourceUid;
 
-        RaiseLocalEvent(uid, new ElectrocutedEvent(uid, sourceUid, siemensCoefficient, shockDamage), true);
+        RaiseLocalEvent(uid, new ElectrocutedEvent(uid, sourceUid, siemensCoefficient), true);
 
         return true;
     }
@@ -489,5 +487,16 @@ public sealed class ElectrocutionSystem : SharedElectrocutionSystem
             return;
         }
         _audio.PlayPvs(electrified.ShockNoises, targetUid, AudioParams.Default.WithVolume(electrified.ShockVolume));
+    }
+
+    public void SetElectrifiedWireCut(Entity<ElectrifiedComponent> ent, bool value)
+    {
+        if (ent.Comp.IsWireCut == value)
+        {
+            return;
+        }
+
+        ent.Comp.IsWireCut = value;
+        Dirty(ent);
     }
 }

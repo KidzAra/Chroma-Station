@@ -1,13 +1,13 @@
+using Content.Server.Backmen.Language;
 using Content.Server.Chat.Systems;
 using Content.Server.Emp;
-using Content.Server.Language;
 using Content.Server.Radio.Components;
-using Content.Server.Speech;
-using Content.Shared.Chat;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
 using Content.Shared.Radio.EntitySystems;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 
@@ -18,7 +18,7 @@ public sealed class HeadsetSystem : SharedHeadsetSystem
     [Dependency] private readonly INetManager _netMan = default!;
     [Dependency] private readonly RadioSystem _radio = default!;
     [Dependency] private readonly LanguageSystem _language = default!;
-
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
     public override void Initialize()
     {
         base.Initialize();
@@ -56,7 +56,12 @@ public sealed class HeadsetSystem : SharedHeadsetSystem
             && TryComp(component.Headset, out EncryptionKeyHolderComponent? keys)
             && keys.Channels.Contains(args.Channel.ID))
         {
-            _radio.SendRadioMessage(uid, args.Message, args.Channel, component.Headset);
+            _radio.SendRadioMessage(uid,
+                args.Message,
+                args.Channel,
+                component.Headset,
+                language: args.Language // backmen: language
+                );
             args.Channel = null; // prevent duplicate messages from other listeners.
         }
     }
@@ -101,18 +106,31 @@ public sealed class HeadsetSystem : SharedHeadsetSystem
         }
     }
 
+    // start-backmen: radio sound
+
+    private static readonly SoundSpecifier DefaultOnSound =
+        new SoundPathSpecifier("/Audio/Backmen/Radio/common.ogg", AudioParams.Default.WithVolume(-6).WithMaxDistance(2));
+
+    // end-backmen: radio sound
+
     private void OnHeadsetReceive(EntityUid uid, HeadsetComponent component, ref RadioReceiveEvent args)
     {
-        var parent = Transform(uid).ParentUid;
-        if (TryComp(parent, out ActorComponent? actor))
+        // start-backmen: language
+        var plr = Transform(uid).ParentUid;
+        if (TryComp(plr, out ActorComponent? actor))
         {
-            var canUnderstand = _language.CanUnderstand(parent, args.Language.ID);
-            var msg = new MsgChatMessage
-            {
-                Message = canUnderstand ? args.OriginalChatMsg : args.LanguageObfuscatedChatMsg
-            };
+            var msg = args.ChatMsg;
+            if (args.Language != null && args.LanguageObfuscatedChatMsg != null &&
+                !_language.CanUnderstand(plr, args.Language.ID))
+                msg = args.LanguageObfuscatedChatMsg;
+
             _netMan.ServerSendMessage(msg, actor.PlayerSession.Channel);
         }
+
+        // end-backmen: language
+
+
+        _audio.PlayPvs(args.Channel.OnSendSound ?? DefaultOnSound, uid); // backmen: radio sound
     }
 
     private void OnEmpPulse(EntityUid uid, HeadsetComponent component, ref EmpPulseEvent args)
