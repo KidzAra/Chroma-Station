@@ -39,3 +39,15 @@
   name: PigeonBeans - Sunset
   path:
     path: /Audio/Jukebox/sunset.ogg
+
+- type: jukebox
+  id: jimmy_neutron
+  name: Неизветсная запись 01
+  path:
+    path: /Audio/Jukebox/Jimmy_Neutron.ogg
+
+- type: jukebox
+  id: bi2goroda
+  name: Би-2 - Полковнику никто не пишет
+  path:
+    path: /Audio/Jukebox/b2goroda.ogg

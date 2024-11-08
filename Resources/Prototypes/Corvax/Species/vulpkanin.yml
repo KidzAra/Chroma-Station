@@ -1,8 +1,8 @@
 - type: species
   id: Vulpkanin
-  name: species-name-vulpkanin
+  name: Вульпа
   roundStart: true
-  sponsorOnly: true # Corvax-Sponsors
+  sponsorOnly: false # Corvax-Sponsors
   prototype: MobVulpkanin
   sprites: MobVulpkaninSprites
   defaultSkinTone: "#eb943d"

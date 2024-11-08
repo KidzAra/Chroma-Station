@@ -64,3 +64,22 @@
         layer:
         - MachineLayer
         density: 200
+
+- type: entity
+  id: WalkmanPlayer
+  name: NT Walkman-4000
+  parent: BaseItem
+  description: Музыкальный автомат? Пфф... это уже прошлый век, с плеером NT Walkman-4000 раздражайте всех заранее загруженной музыкой где угодно!
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/walkman.rsi
+    layers:
+    - state: "icon"
+  - type: UserInterface
+    interfaces:
+        enum.JukeboxUiKey.Key:
+          type: JukeboxBoundUserInterface
+  - type: Jukebox
+    onState: on
+    offState: off
+    selectState: select

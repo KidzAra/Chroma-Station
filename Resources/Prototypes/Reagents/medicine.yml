@@ -140,7 +140,7 @@
       - !type:HealthChange
         damage:
           groups:
-            Brute: -2
+            Brute: -1
       - !type:HealthChange
         conditions:
         - !type:ReagentThreshold
@@ -1161,7 +1161,7 @@
         conditions:
         - !type:ReagentThreshold
           min: 12
-          
+
 - type: reagent
   id: Opporozidone #Name based of an altered version of the startreck chem "Opporozine"
   name: reagent-name-opporozidone
