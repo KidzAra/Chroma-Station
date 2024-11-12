@@ -1,8 +1,8 @@
 - type: ttsVoice
-  id: Oleg
-  name: tts-voice-name-oleg
+  id: papich
+  name: Папич
   sex: Male
-  speaker: oleg
+  speaker: papich
 
 - type: ttsVoice
   id: Zina

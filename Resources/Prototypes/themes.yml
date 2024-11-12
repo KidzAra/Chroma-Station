@@ -4,7 +4,7 @@
   colors:
     whiteText: "#FFF5EE"
     slotSelectedGold: "#e6b812"
-    slotColor: "#0f1215"
+    slotColor: "#361d00"
     slotOutline: "#333850"
     slotText: "#333850"
     nanoGold: "#A88B5E"
